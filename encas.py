@@ -28,73 +28,73 @@ from errors import errorhandler
 def home():
     return redirect('https://github.com/hugoatease/encas')
 
-@app.route('/account/list')
+@app.route('/account/list', methods=['GET'])
 @errorhandler
 def listAccounts():
     accounts = account.listAccounts()
     return [acc.serialize() for acc in accounts]
 
-@app.route('/account/<int:account_id>')
+@app.route('/account/<int:account_id>', methods=['GET'])
 @errorhandler
 def getAccount(account_id):
     return account.getAccount(account_id).serialize()
 
-@app.route('/account/number/<int:number>')
+@app.route('/account/number/<int:number>', methods=['GET'])
 @errorhandler
 def getAccountByNumber(number):
     return account.getAccountByNumber(number).serialize() 
 
-@app.route('/account/create')
+@app.route('/account/create', methods=['POST'])
 @errorhandler
 def createAccount():
     fields = parseData({'firstname', 'lastname', 'promo'})
     
     return account.create(fields['firstname'], fields['lastname'], fields['promo']).serialize()
 
-# @app.route('/account/<int:id>/delete')
+# @app.route('/account/<int:id>/delete', methods=['POST'])
 # @errorhandler
 # def deleteAccount(id):
 #     return account.deleteAccount(id).serialize()
 
-@app.route('/account/<int:id>/edit')
+@app.route('/account/<int:id>/edit', methods=['POST'])
 @errorhandler
 def editAccount(id):
     fields = parseData({'firstname', 'lastname', 'promo'})
     return account.editAccount(id, fields).serialize()
 
-@app.route('/account/<int:id>/balance')
+@app.route('/account/<int:id>/balance', methods=['GET'])
 @errorhandler
 def getBalance(id):
     return {'balance' : transaction.getBalance(id)}
 
-@app.route('/account/<int:id>/calculate')
+@app.route('/account/<int:id>/calculate', methods=['GET'])
 @errorhandler
 def calculateBalance(id):
     return {'balance' : transaction.calculateBalance(id)}
 
-@app.route('/account/<int:account_id>/transactions')
+@app.route('/account/<int:account_id>/transactions', methods=['GET'])
 @errorhandler
 def getTransactions(account_id):
     return [tr.serialize() for tr in transaction.getByAccount(account_id)]
 
-@app.route('/account/<int:account_id>/revoked')
+@app.route('/account/<int:account_id>/revoked', methods=['GET'])
 @errorhandler
 def revokedByAccount(account_id):
     return [tr.serialize() for tr in transaction.getByAccount(account_id, revoked=True)]
 
-@app.route('/transaction/add')
+@app.route('/transaction/add', methods=['POST'])
 @errorhandler
 def addTransaction():
     fields = parseData({'account_id', 'cash'})
     return transaction.add(int(fields['account_id']), float(fields['cash'])).serialize()
     
 
-@app.route('/transaction/<int:id>/revoke')
+@app.route('/transaction/<int:id>/revoke', methods=['POST'])
 @errorhandler
 def revokeTransaction(id):
     return transaction.revoke(id).serialize()
 
-# @app.route('/transaction/<int:id>/unrevoke')
+# @app.route('/transaction/<int:id>/unrevoke', methods=['POST'])
 # @errorhandler
 # def unrevokeTransaction(id):
 #     return transaction.unrevoke(id).serialize()
