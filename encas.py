@@ -16,7 +16,7 @@
 #   You should have received a copy of the GNU General Public License
 #   along with Encas.  If not, see <http://www.gnu.org/licenses/>.
 
-from flask import Flask, jsonify, request, redirect
+from flask import Flask, jsonify, request, send_from_directory
 app = Flask(__name__)
 app.debug = True
 
@@ -26,7 +26,7 @@ from errors import errorhandler
 
 @app.route('/')
 def home():
-    return redirect('https://github.com/hugoatease/encas')
+    return send_from_directory('static', 'index.html')
 
 @app.route('/account/list', methods=['GET'])
 @errorhandler
