@@ -77,16 +77,21 @@ class User(Base):
     __tablename__ = "users"
     id =  Column(Integer, primary_key=True, nullable=False)
     
-    username = Column(String, nullable=False)
+    username = Column(String, nullable=False, unique=True)
     password = Column(String, nullable=False)
-    admin = Column(Boolean, nullable=False, default=False)
     
-    token = Column(String(length=50), nullable=True)
+    admin = Column(Boolean, nullable=False, default=False)
+    suspended = Column(Boolean, nullable=False, default=False)
+    
+    token = Column(String(length=50), nullable=True, unique=True)
     
     def update_token(self):
         self.token = Token(length=50).make()
         session.add(self)
         session.commit()
+    
+    def serialize(self):
+        return {'id' : self.id, 'username' : self.username, 'admin' : self.admin}
 
 def createTables():
     for table in [Account, Transaction, User]:
