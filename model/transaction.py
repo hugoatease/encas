@@ -21,7 +21,7 @@ from sqlalchemy import desc
 
 import account
 
-def freeOperationNumber():
+def freeNumber():
     if session.query(Transaction).count() == 0:
         return 1
     else:
@@ -29,7 +29,7 @@ def freeOperationNumber():
         return result.operation + 1
 
 def getByAccount(account_id, max=5, revoked=False):
-    account.getAccount(account_id) # Raises exception if account doesn't exist.
+    account.get(account_id) # Raises exception if account doesn't exist.
     query = session.query(Transaction).filter_by(account=account_id, revoked=revoked) \
             .order_by("operation desc")
     
@@ -65,7 +65,7 @@ def add(account_id, cash):
     else:
         balance = last.balance + cash
     
-    transaction = Transaction(account=account_id, operation=freeOperationNumber(), cash=cash, balance=balance)
+    transaction = Transaction(account=account_id, operation=freeNumber(), cash=cash, balance=balance)
     session.add(transaction)
     session.commit()
     return transaction

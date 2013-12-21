@@ -21,7 +21,7 @@ from sqlalchemy import desc
 from sqlalchemy.orm.exc import NoResultFound
 from errors import ApiError
 
-def freeAccountNumber():
+def freeNumber():
     if session.query(Account).count() == 0:
         return 1
     else:
@@ -29,36 +29,36 @@ def freeAccountNumber():
         return result.number + 1
 
 def create(firstname, lastname, promo):
-    account = Account(number=freeAccountNumber(), firstname=firstname, lastname=lastname, promo=promo)
+    account = Account(number=freeNumber(), firstname=firstname, lastname=lastname, promo=promo)
     session.add(account)
     session.commit()
     
     return account
 
-def getAccount(id):
+def get(id):
     account = session.query(Account).get(id)
     if account is None:
         raise ApiError("Account not found")
     return account
 
-def deleteAccount(id):
-    account = getAccount(id)
+def delete(id):
+    account = get(id)
     session.delete(account)
     session.commit()
     
     return account
 
-def getAccountByNumber(number):
+def getByNumber(number):
     try:
         return session.query(Account).filter_by(number=number).one()
     except NoResultFound:
         raise ApiError("Account not found")
 
-def listAccounts():
+def list():
     return session.query(Account).all()
 
-def editAccount(id, fields):
-    account = getAccount(id)
+def edit(id, fields):
+    account = get(id)
     allowed = ['firstname', 'lastname', 'promo']
     
     for key in fields.keys():

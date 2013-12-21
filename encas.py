@@ -31,18 +31,18 @@ def home():
 @app.route('/account/list', methods=['GET'])
 @errorhandler
 def listAccounts():
-    accounts = account.listAccounts()
+    accounts = account.list()
     return [acc.serialize() for acc in accounts]
 
 @app.route('/account/<int:account_id>', methods=['GET'])
 @errorhandler
 def getAccount(account_id):
-    return account.getAccount(account_id).serialize()
+    return account.get(account_id).serialize()
 
 @app.route('/account/number/<int:number>', methods=['GET'])
 @errorhandler
 def getAccountByNumber(number):
-    return account.getAccountByNumber(number).serialize() 
+    return account.getByNumber(number).serialize() 
 
 @app.route('/account/create', methods=['POST'])
 @errorhandler
@@ -54,13 +54,13 @@ def createAccount():
 # @app.route('/account/<int:id>/delete', methods=['POST'])
 # @errorhandler
 # def deleteAccount(id):
-#     return account.deleteAccount(id).serialize()
+#     return account.delete(id).serialize()
 
 @app.route('/account/<int:id>/edit', methods=['POST'])
 @errorhandler
 def editAccount(id):
     fields = parseData({'firstname', 'lastname', 'promo'})
-    return account.editAccount(id, fields).serialize()
+    return account.edit(id, fields).serialize()
 
 @app.route('/account/<int:id>/balance', methods=['GET'])
 @errorhandler
