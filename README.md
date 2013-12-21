@@ -24,6 +24,7 @@ Pour créer une instance de test sous Debian, placez vous dans le dossier où en
 - virtualenv env
 - source ./env/bin/activate
 - pip install -r requirements.txt
+- python setup.py
 
 L'instance de test pourra ainsi être lancée de la manière suivante :
 - source ./env/bin/activate
