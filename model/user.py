@@ -36,9 +36,16 @@ def login(username, password):
     user.update_token()
     return user
 
+def get(user_id):
+    return session.query(User).get(user_id)
+
+def getByUsername(username):
+    return session.query(User).filter_by(username=username).one()
+
 def remove(id):
     user = session.query(User).get(id)
-    session.delete(user)
+    user.suspended = True
+    session.add(user)
     session.commit()
     return True
 
@@ -59,14 +66,14 @@ def removeAdmin(id):
 def list():
     return session.query(User).all()
 
-def getUserByToken(token):
+def getByToken(token):
     q = session.query(User).filter_by(token=token)
     if q.count() == 0:
         return None
     return q.one()
 
 def is_authorized(token, admin=False):
-    user = getUserByToken(token)
+    user = getByToken(token)
     if user is None:
         return False
     
