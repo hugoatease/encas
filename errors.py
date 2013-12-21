@@ -52,7 +52,11 @@ def errorhandler(func):
     def wrapper(*args, **kwargs):
         try:
             data = func(*args, **kwargs)
-            return jsonify({'error' : False, 'data' : data})
+            result = {'error' : False}
+            if data is not None:
+                result['data'] = data
+            
+            return jsonify(result)
         
         except MissingFieldsError as e:
             return jsonify(e.serialize())
