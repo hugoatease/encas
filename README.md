@@ -16,6 +16,20 @@ Les prérequis pour faire fonctionner le serveur sont :
 - Un serveur de base de données relationnelles supporté par SQLAlchemy, [PostgreSQL](http://www.postgresql.org/) est le choix recommandé.
 - Un module DBAPI correspondant au serveur de base de données utilisé, [psycopg2](http://initd.org/psycopg/) dans le cas de PostgreSQL.
 
+Installation rapide
+=====
+Pour créer une instance de test sous Debian, placez vous dans le dossier où encas a été cloné et effectuez les commandes suivantes :
+
+- sudo apt-get install python-pip python-virtualenv
+- virtualenv env
+- source ./env/bin/activate
+- pip install -r requirements.txt
+
+L'instance de test pourra ainsi être lancée de la manière suivante :
+- source ./env/bin/activate
+- python encas.py
+
+
 Licence
 =====
 Encas est mis à disposition sous licence GNU GPL v3.
