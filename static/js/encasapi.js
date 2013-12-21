@@ -4,17 +4,6 @@
  */
 
 var api = {
-	user : {
-		login : function(callback, username, password) {
-			var data = {'username' : username, 'password' : password};
-			jQuery.post('/login', data, callback);
-		},
-		
-		logout : function(callback) {
-			jQuery.get('/logout', callback);
-		}
-	},
-	
 	account : {
 		list : function(callback) {
 			jQuery.get('/account/list', callback);
