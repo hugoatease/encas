@@ -17,6 +17,7 @@
 #   along with Encas.  If not, see <http://www.gnu.org/licenses/>.
 
 import random
+from flask import request
 
 class Token:
     def __init__(self, length=50, capitals = True):
