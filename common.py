@@ -18,6 +18,7 @@
 
 import random
 from flask import request
+from errors import MissingFieldsError
 
 class Token:
     def __init__(self, length=50, capitals = True):
