@@ -52,6 +52,10 @@ def load_user(userid):
 def home():
     return send_from_directory('static', 'index.html')
 
+@app.route('/accounts')
+def accounts():
+    return send_from_directory('static', 'accounts.html')
+
 @app.route('/login', methods=['POST'])
 @errorhandler
 def login():
