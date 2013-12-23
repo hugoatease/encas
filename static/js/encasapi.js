@@ -26,7 +26,7 @@ var api = {
 		},
 		
 		getByNumber : function(callback, account_number) {
-			var url = '/account/number/' + account_id;
+			var url = '/account/number/' + account_number;
 			jQuery.get(url, callback);
 		},
 		
