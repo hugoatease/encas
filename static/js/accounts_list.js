@@ -14,20 +14,20 @@ function displayAccountList () {
 
 			var tableHtmlB = ""
 
-			var level = "success"
+			var level = " id = \"success\" "
 			
 			// if (acc.history[i][2] > 0 ){level = " class = \"success\" "};
 			// if (acc.history[i][2] <= 0 ){level = " class = \"warning\" "};
 			// if (acc.history[i][2] < -10){level = " class = \"error\" "};
 
-			tableHtml = tableHtml.concat("<tr" + level + "><td>" + data.data[i].number + "</td> <td>" + data.data[i].firstName +" " + data.data[i].lastName + "</td> </tr>")
+			tableHtml = tableHtml.concat("<tr" + level + "><td>" + data.data[i].number + "</td> <td>" + data.data[i].firstname +" " + data.data[i].lastname + "</td> </tr>")
 		}
  
 		hisTableE.html(tableHtml)
 
 		console.log(data)
 		console.log(tableHtml)
-		console.log(data.data[0].number)
+		console.log(data.data[0].firstname)
 
 	}
 
