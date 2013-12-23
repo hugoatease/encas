@@ -54,6 +54,10 @@ def getByNumber(number):
     except NoResultFound:
         raise ApiError("Account not found")
 
+def search(firstname):
+    filter = firstname + '%'
+    return session.query(Account).filter(Account.firstname.like(filter)).all()
+
 def list():
     return session.query(Account).all()
 
