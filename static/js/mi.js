@@ -2,11 +2,26 @@ current = {
 	account_id : undefined,
 };
 
+function reportError(data) {
+	var alertbar = $("#encasAlert");
+	if (data.error) {
+		alertbar.css("display", "block");
+		alertbar.html("<b>Erreur</b> : " + data.reason);
+		return true;
+	}
+	alertbar.css("display", "none");
+	return false;
+}
+
 function getTransactions(account_id) {
 	var table = $("#transactionList");
 	table.children().remove();
 	
 	function refresh(data) {
+		if (reportError(data)) {
+			return;
+		}
+		
 		var data = data.data;
 		
 		for (var i=0; i < data.length; i++) {
@@ -36,6 +51,10 @@ function getAccount() {
 	var number = $("#accountNumberInput").val();
 	
 	function refresh(data) {
+		if (reportError(data)) {
+			return;
+		}
+		
 		var data = data.data;
 		$("#accountNumber").html(data.number);
 		$("#name").html(data.firstname + " " + data.lastname);
@@ -53,6 +72,10 @@ function checkout() {
 	var cash = $("#checkout #directInput").val();
 	
 	function refresh(data) {
+		if (reportError(data)) {
+			return;
+		}
+
 		getTransactions(account_id);
 	}
 	

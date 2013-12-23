@@ -64,4 +64,6 @@ def errorhandler(func):
             return jsonify(e.serialize())
         except OperationalError as e:
             return jsonify({'error' : True, 'reason' : "Cannot access database"})
+        except ValueError:
+            return jsonify({'error' : True, 'reason' : "Invalid input"})
     return wrapper
