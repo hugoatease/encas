@@ -31,28 +31,26 @@
 
 
 var acc = {
-  "accountNumber" : 41,
-  "firstName": "Louis",
-  "lastName": "Declerfayt",
-  "year" : "CIR II",
-  "staff": true,
-  "balance" : 5,
+  "accountNumber" : "" ,
+  "firstName": "",
+  "lastName": "",
+  "promo" : "",
+  "staff": "" ,
+  "balance" : "" ,
   "history": [ [1,0,5],[2,-5,0],[3,10,10],[4,15,25],[5,-50,-25] ],
 }
 
 
 function displayAccountData (data) {
 
-
-
 	accountNumberE = $('#accountNumber')
 	nameE = $('#name')
-	yearE = $('#year')	
+	promoE = $('#year')	
 	hisTableE = $('#hisTable')
 
 	accountNumberE.html(data.accountNumber)
 	nameE.html(data.firstName + "  " + data.lastName)
-	yearE.html(data.year)
+	promoE.html(data.promo)
 
 	var tableHtml = ""
 
@@ -103,8 +101,29 @@ function directInput (ev) {
 
 }
 
-displayAccountData(acc)
+research_num(2)
 
+function research_num(nb) {
+	
+	function success(data) {
+		if (data.error) {
+			alert("Erreur: " + data.reason);
+			return;
+		}
+		
+		acc.accountNumber = data.data.number
+		acc.firstName = data.data.firstname
+		acc.lastName = data.data.lastname
+		acc.promo = data.data.promo
+
+		displayAccountData(acc)
+	}
+
+	api.account.getByNumber(success,nb)
+
+}
+
+var search_nbE = document.getElementById('search_nb') 
 
 
 

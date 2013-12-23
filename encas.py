@@ -56,6 +56,10 @@ def home():
 def accounts():
     return send_from_directory('static', 'accounts.html')
 
+@app.route('/accounts_list')
+def accounts_list():
+    return send_from_directory('static', 'accounts_list.html')
+
 @app.route('/login', methods=['POST'])
 @errorhandler
 def login():
