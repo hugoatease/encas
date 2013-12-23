@@ -30,6 +30,11 @@ var api = {
 			jQuery.get(url, callback);
 		},
 		
+		search : function(callback, firstname) {
+			var url = '/account/search/' + firstname;
+			jQuery.get(url, callback);
+		},
+		
 		create : function(callback, firstname, lastname, promo) {
 			var data = {'firstname' : firstname, 'lastname' : lastname, 'promo' : promo};
 			jQuery.post('/account/create', data, callback);

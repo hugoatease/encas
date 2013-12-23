@@ -90,7 +90,12 @@ def getAccount(account_id):
 @app.route('/account/number/<int:number>', methods=['GET'])
 @errorhandler
 def getAccountByNumber(number):
-    return account.getByNumber(number).serialize() 
+    return account.getByNumber(number).serialize()
+
+@app.route('/account/search/<firstname>', methods=['GET'])
+@errorhandler
+def searchAccount(firstname):
+    return [acc.serialize() for acc in account.search(firstname)]
 
 @app.route('/account/create', methods=['POST'])
 @errorhandler
