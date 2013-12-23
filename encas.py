@@ -52,6 +52,10 @@ def load_user(userid):
 def home():
     return send_from_directory('static', 'index.html')
 
+@app.route('/accounts')
+def accounts():
+    return send_from_directory('static', 'accounts.html')
+
 @app.route('/login', methods=['POST'])
 @errorhandler
 def login():
@@ -69,26 +73,22 @@ def logout():
     return None
 
 @app.route('/account/list', methods=['GET'])
-@login_required
 @errorhandler
 def listAccounts():
     accounts = account.list()
     return [acc.serialize() for acc in accounts]
 
 @app.route('/account/<int:account_id>', methods=['GET'])
-@login_required
 @errorhandler
 def getAccount(account_id):
     return account.get(account_id).serialize()
 
 @app.route('/account/number/<int:number>', methods=['GET'])
-@login_required
 @errorhandler
 def getAccountByNumber(number):
     return account.getByNumber(number).serialize() 
 
 @app.route('/account/create', methods=['POST'])
-@login_required
 @errorhandler
 def createAccount():
     fields = parseData({'firstname', 'lastname', 'promo'})
@@ -96,38 +96,32 @@ def createAccount():
     return account.create(fields['firstname'], fields['lastname'], fields['promo']).serialize()
 
 @app.route('/account/<int:id>/edit', methods=['POST'])
-@login_required
 @errorhandler
 def editAccount(id):
     fields = parseData({'firstname', 'lastname', 'promo'})
     return account.edit(id, fields).serialize()
 
 @app.route('/account/<int:id>/balance', methods=['GET'])
-@login_required
 @errorhandler
 def getBalance(id):
     return {'balance' : transaction.getBalance(id)}
 
 @app.route('/account/<int:id>/calculate', methods=['GET'])
-@login_required
 @errorhandler
 def calculateBalance(id):
     return {'balance' : transaction.calculateBalance(id)}
 
 @app.route('/account/<int:account_id>/transactions', methods=['GET'])
-@login_required
 @errorhandler
 def getTransactions(account_id):
     return [tr.serialize() for tr in transaction.getByAccount(account_id)]
 
 @app.route('/account/<int:account_id>/revoked', methods=['GET'])
-@login_required
 @errorhandler
 def revokedByAccount(account_id):
     return [tr.serialize() for tr in transaction.getByAccount(account_id, revoked=True)]
 
 @app.route('/transaction/add', methods=['POST'])
-@login_required
 @errorhandler
 def addTransaction():
     fields = parseData({'account_id', 'cash'})
@@ -135,7 +129,6 @@ def addTransaction():
     
 
 @app.route('/transaction/<int:id>/revoke', methods=['POST'])
-@login_required
 @errorhandler
 def revokeTransaction(id):
     return transaction.revoke(id).serialize()
