@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+{% block title %} - Caisse{% endblock %}
+
+{% block content %}
+<div class="container">
+	<div id="encasAlert" class="alert alert-danger" style="display: none;"></div>
+	<div class="row">
+		<div class="col-md-1 col-md-offset-1">
+			<button type="button" class="btn btn-large" id="search_nb"><i class="fa fa-th-list"></i></button>
+		</div>
+
+		<div class="col-md-1 col-md-offset-1">
+			<p><button class="btn btn-link"><span id="accountNumber">N°</span></button></p>
+		</div>
+
+		<div class="col-md-4"> 
+			<p><button class="btn btn-link"><span id="name">Nom/pre</span></button></p>
+		</div>
+
+		<div class="col-md-1">
+			<p><button class="btn btn-link"><span id="year">Classe</span></button></p>
+		</div>
+
+		<div class="col-md-1 col-md-offset-1">
+			<button type="button" class="btn btn-large" id="search_name"><i class="fa fa-users"></i></button>
+		</div>
+	</div>
+	
+	<br />
+	
+	<div class="row">
+		<div id="search_number_box" class="col-md-4" style="display: none;">
+			<div class="alert alert-success">
+				<p><b>Recherche par numéro de compte</b></p>
+				<br />
+				<form id="searchByIDForm" class="form-inline" role="form">
+					<div class="form-group">
+						<input class="form-control" id="accountNumberInput" type="text" placeholder="N° de compte"> 
+					</div>
+					<button type="submit" class="btn btn-primary">Recherche</button>
+				</form>
+			</div>
+		</div>
+		
+		<div id="search_name_box" class="col-md-4 col-md-offset-8" style="display: none;">
+			<div class="alert alert-success">
+				<p><b>Recherche par nom</b></p>
+			</div>
+		</div>
+	</div>
+	
+	<div class="row">
+		<div class="col-md-4 col-md-offset-1">
+			
+			<table class="table table-hover table-bordered">
+				<thead>
+					<tr>
+						<th> Operation n°</th>
+						<th> Montant</th>
+						<th> Solde</th>
+					</tr>
+				</thead>
+
+				<tbody id="transactionList">
+					
+				</tbody>
+
+
+			</table>
+
+		</div>
+
+		<div class="col-md-4 col-md-offset-1"> 
+			<table class="table">
+				<thead>
+					<th>Produit</th>
+					<th>Quantité</th>
+					<th>Prix unitaire</th>
+					<th>Total</th>
+				</thead>
+				<tbody>
+					<tr>
+						<td>Direct</td>
+						<td>1</td>
+						<td>2.6</td>
+						<td>2.6</td>
+					</tr>
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td>11.5</td>
+					</tr>
+
+				</tbody>
+			</table>
+		</div>
+	</div>
+	
+	<div class="row">				
+		<center>
+			<form id="checkout" class="form-inline" role="form">
+				<div class="form-group">
+					<div class="input-group">
+						<input class="form-control" id="directInput" type="text" placeholder="Montant"> 
+						<span class="input-group-addon">€</span>
+					</div>
+				</div>
+				<button type="submit" class="btn btn-primary" id="directInputBtn">Go !</button>
+			</form>
+	</div>
+		</center>
+	
+</div>
+
+{% endblock %}

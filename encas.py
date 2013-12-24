@@ -16,7 +16,7 @@
 #   You should have received a copy of the GNU General Public License
 #   along with Encas.  If not, see <http://www.gnu.org/licenses/>.
 
-from flask import Flask, jsonify, request, send_from_directory, url_for, redirect
+from flask import Flask, jsonify, request, send_from_directory, url_for, redirect, render_template
 app = Flask(__name__)
 app.secret_key = "z5f6rfqb1u5o8m4lk,13wr8er78h1d5x5dgd4568rh87i8ys3c2z781136941778"
 app.debug = True
@@ -50,15 +50,15 @@ def load_user(userid):
 
 @app.route('/')
 def home():
-    return send_from_directory('static', 'index.html')
+    return render_template("home.html")
 
 @app.route('/accounts')
 def accounts():
-    return send_from_directory('static', 'accounts.html')
+    return render_template("accounts.html")
 
 @app.route('/accounts_list')
 def accounts_list():
-    return send_from_directory('static', 'accounts_list.html')
+    return render_template('accounts_list.html')
 
 @app.route('/login', methods=['POST'])
 @errorhandler
