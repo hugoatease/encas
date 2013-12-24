@@ -1,5 +1,7 @@
 current = {
 	account_id : undefined,
+	display_number_search: false,
+	display_name_search: false,
 };
 
 function reportError(data) {
@@ -85,9 +87,45 @@ function checkout() {
 $("#searchByIDForm").submit(function(ev) {
 	ev.preventDefault();
 	getAccount();
+	current.display_number_search = false;
+	$("#search_number_box").css("display", "none");
 });
 
 $("#checkout").submit(function(ev) {
 	ev.preventDefault();
 	checkout();
+});
+
+$("#search_nb").click(function(ev) {
+	ev.preventDefault();
+	if (current.display_name_search) {
+		$("#search_name_box").css("display", "none");
+		current.display_name_search = false;
+	}
+	
+	if (!current.display_number_search) {
+		current.display_number_search = true;
+		$("#search_number_box").css("display", "block");
+	}
+	else {
+		current.display_number_search = false;
+		$("#search_number_box").css("display", "none");
+	}
+});
+
+$("#search_name").click(function(ev) {
+	ev.preventDefault();
+	if (current.display_number_search) {
+		$("#search_number_box").css("display", "none");
+		current.display_number_search = false;
+	}
+	
+	if (!current.display_name_search) {
+		current.display_name_search = true;
+		$("#search_name_box").css("display", "block");
+	}
+	else {
+		current.display_name_search = false;
+		$("#search_name_box").css("display", "none");
+	}
 });

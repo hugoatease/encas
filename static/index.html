@@ -52,11 +52,32 @@
 				</div>
 	
 				<div class="col-md-1 col-md-offset-1">
-					<button type="button" class="btn btn-large"><i class="fa fa-users"></i></button>
+					<button type="button" class="btn btn-large" id="search_name"><i class="fa fa-users"></i></button>
 				</div>
 			</div>
 			
 			<br />
+			
+			<div class="row">
+				<div id="search_number_box" class="col-md-4" style="display: none;">
+					<div class="alert alert-success">
+						<p><b>Recherche par numéro de compte</b></p>
+						<br />
+						<form id="searchByIDForm" class="form-inline" role="form">
+							<div class="form-group">
+								<input class="form-control" id="accountNumberInput" type="text" placeholder="N° de compte"> 
+							</div>
+							<button type="submit" class="btn btn-primary">Recherche</button>
+						</form>
+					</div>
+				</div>
+				
+				<div id="search_name_box" class="col-md-4 col-md-offset-8" style="display: none;">
+					<div class="alert alert-success">
+						<p><b>Recherche par nom</b></p>
+					</div>
+				</div>
+			</div>
 			
 			<div class="row">
 				<div class="col-md-4 col-md-offset-1">
@@ -124,17 +145,8 @@
 				</div>
 			</div>
 			
-			<div class="row">
-				<div class="col-md-4">
-					<form id="searchByIDForm" class="form-inline" role="form">
-						<div class="form-group">
-							<input class="form-control" id="accountNumberInput" type="text" placeholder="N° de compte"> 
-						</div>
-						<button type="submit" class="btn btn-primary">Recherche</button>
-					</form>
-				</div>
-				
-				<div class="col-md-4 col-md-offset-2">
+			<div class="row">				
+				<center>
 					<form id="checkout" class="form-inline" role="form">
 						<div class="form-group">
 							<div class="input-group">
@@ -144,8 +156,8 @@
 						</div>
 						<button type="submit" class="btn btn-primary" id="directInputBtn">Go !</button>
 					</form>
-				</div>
 			</div>
+				</center>
 			
 		</div>
 
