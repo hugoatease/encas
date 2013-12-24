@@ -18,7 +18,7 @@
 
 import random
 from flask import request
-from errors import MissingFieldsError
+from errors import ApiError, MissingFieldsError
 
 class Token:
     def __init__(self, length=50, capitals = True):
@@ -49,19 +49,8 @@ class Token:
             
         return self.token
 
-def parseData(fields):
-    result = dict()
-    missing = list()
-    for field in fields:
-        try:
-            if request.method == "GET":
-                result[field] = request.args[field]
-            if request.method == "POST":
-                result[field] = request.form[field]
-        except KeyError:
-            missing.append(field)
-    
-    if len(missing) != 0:
-        raise MissingFieldsError(missing)
-    
-    return result
+def convert(convertor, arg):
+    try:
+        return convertor(arg)
+    except:
+        raise ApiError("Invalid API parameter")
