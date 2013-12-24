@@ -56,10 +56,6 @@ def home():
 def accounts():
     return render_template("accounts.html")
 
-@app.route('/accounts_list')
-def accounts_list():
-    return render_template('accounts_list.html')
-
 @app.route('/login', methods=['POST'])
 @errorhandler
 def login():
