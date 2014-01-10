@@ -72,7 +72,7 @@ var accountModel = {
 			this.transactions(data);
 		}
 		
-		api.transaction.listByAccount(refresh.bind(accountModel), account_id);
+		api.transaction.listByAccount(refresh.bind(accountModel), account_id, true);
 	},
 };
 
