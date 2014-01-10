@@ -3,6 +3,18 @@ var checkoutModel = {
 	transactions: ko.observableArray(),
 	checkout_price: ko.observable(),
 	
+	getBalance: function(account_id) {
+		function refreshBalance(data) {
+			if (reportError(data)) {
+				return;
+			}
+			
+			this.balance(data.data.balance);
+		}
+		
+		api.account.balance(refreshBalance.bind(checkoutModel), account_id);
+	},
+	
 	getTransactions: function(account_id) {
 		function refresh(data) {
 			if (reportError(data)) {
@@ -30,16 +42,7 @@ var checkoutModel = {
 			this.transactions(data);
 		}
 		
-		function refreshBalance(data) {
-			if (reportError(data)) {
-				return;
-			}
-			
-			this.balance(data.data.balance);
-		}
-		
 		api.transaction.listByAccount(refresh.bind(checkoutModel), account_id);
-		api.account.balance(refreshBalance.bind(checkoutModel), account_id);
 	},
 	
 	checkout: function() {
@@ -51,6 +54,7 @@ var checkoutModel = {
 			}
 	
 			this.getTransactions(account_id);
+			this.getBalance(account_id);
 			this.checkout_price("");
 		}
 		
@@ -58,4 +62,7 @@ var checkoutModel = {
 	}
 };
 
-current.search_callback = checkoutModel.getTransactions;
+current.search_callback = function(account_id) {
+	checkoutModel.getTransactions(account_id);
+	checkoutModel.getBalance(account_id);
+};

@@ -56,9 +56,9 @@ def load_user(userid):
 def home():
     return render_template("home.html")
 
-@app.route('/accounts')
+@app.route('/account')
 def accounts():
-    return render_template("accounts.html")
+    return render_template("account.html")
 
 @app.route('/admin')
 def admin():

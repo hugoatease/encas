@@ -1,0 +1,25 @@
+<table class="table table-hover table-bordered">
+	<thead>
+		<tr>
+			<th>Operation #</th>
+			<th>Date</th>
+			<th>Montant</th>
+			<th>Solde</th>
+			<th>Révoquée</th>
+		</tr>
+	</thead>
+
+	<tbody data-bind="foreach: transactions">
+		<tr data-bind="css: state">
+			<td data-bind="text: operation"></td>
+			<td data-bind="text: date"></td>
+			<td><span data-bind="text: cash"></span> €</td>
+			<td><span data-bind="text: balance"></span> €</td>
+			
+			<td>
+				<span data-bind="if: revoked" class="label label-danger">Oui</span>
+				<span data-bind="ifnot: revoked" class="label label-success">Non</span>
+			</td>
+		</tr>
+	</tbody>
+</table>
