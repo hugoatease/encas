@@ -58,7 +58,7 @@ class Transaction(Base):
     __tablename__ = "transactions"
     id =  Column(Integer, primary_key=True, nullable=False)
     account = Column(Integer, ForeignKey('accounts.id'), nullable=False)
-    date = Column(Date, nullable=False, default=datetime.utcnow)
+    date = Column(DateTime, nullable=False, default=datetime.utcnow)
     
     operation = Column(Integer, nullable=False)
     cash = Column(Float, nullable=False)
