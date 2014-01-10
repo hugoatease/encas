@@ -58,12 +58,12 @@ var api = {
 	},
 	
 	transaction : {
-		listByAccount : function(callback, account_id, revoked) {
-			if (revoked === true) {
+		listByAccount : function(callback, account_id, all) {
+			if (!all || all === undefined) {
 				var url = '/account/' + account_id + '/transactions';
 			}
 			else {
-				var url = '/account/' + account_id + '/transactions';
+				var url = '/account/' + account_id + '/transactions/all';
 			}
 			jQuery.get(url, callback);
 		},

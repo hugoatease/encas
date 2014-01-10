@@ -1,17 +1,4 @@
-var current = {
-	account_id : undefined,
-};
-
-function reportError(data) {
-	var alertbar = $("#encasAlert");
-	if (data.error) {
-		alertbar.css("display", "block");
-		alertbar.html("<b>Erreur</b> : " + data.reason);
-		return true;
-	}
-	alertbar.css("display", "none");
-	return false;
-}
+current.search_callback = getTransactions;
 
 function getTransactions(account_id) {
 	var table = $("#transactionList");
@@ -38,13 +25,33 @@ function getTransactions(account_id) {
 				}
 			}
 			
+			var date = new Date(data[i].date);
+			
 			$("<td>").html(data[i].operation).appendTo(line);
-			$("<td>").html(data[i].cash).appendTo(line);
-			$("<td>").html(data[i].balance).appendTo(line);
+			$("<td>").html(formatDate(date)).appendTo(line);
+			$("<td>").html(data[i].cash + " €").appendTo(line);
+			$("<td>").html(data[i].balance + " €").appendTo(line);
+			
+			if (!data[i].revoked) {
+				$("<td>").append($("<span>").addClass("label").addClass("label-success").html("Non")).appendTo(line);
+			}
+			else {
+				$("<td>").append($("<span>").addClass("label").addClass("label-danger").html("Oui")).appendTo(line);
+			}
 		}
 	}
 	
+	function refreshBalance(data) {
+		if (reportError(data)) {
+			return;
+		}
+		
+		var balance = data.data.balance;
+		$("#account_balance").html(balance);
+	}
+	
 	api.transaction.listByAccount(refresh, account_id);
+	api.account.balance(refreshBalance, account_id);
 }
 
 function checkout() {

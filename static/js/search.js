@@ -11,7 +11,9 @@ function showAccount(number) {
 		$("#year").html(data.promo);
 		
 		current.account_id = data.id;
-		getTransactions(data.id);
+		if (current.search_callback !== undefined) {
+			current.search_callback(data.id);
+		}
 	}
 	
 	api.account.getByNumber(refresh, number);

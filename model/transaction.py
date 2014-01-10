@@ -28,9 +28,9 @@ def freeNumber():
         result = session.query(Transaction).order_by("operation desc").first()
         return result.operation + 1
 
-def getByAccount(account_id, max=5, revoked=False):
+def getByAccount(account_id, max=None):
     account.get(account_id) # Raises exception if account doesn't exist.
-    query = session.query(Transaction).filter_by(account=account_id, revoked=revoked) \
+    query = session.query(Transaction).filter_by(account=account_id) \
             .order_by("operation desc")
     
     if max is not None:

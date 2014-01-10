@@ -1,42 +1,80 @@
-function addAccount() {
-	var result = $("#addAccountForm .apiresult:first");
-	var firstname = $("#addAccountForm [name='firstname']").val();
-	var lastname = $("#addAccountForm [name='lastname']").val();
-	var promo = $("#addAccountForm [name='promo']").val();
+current.search_callback = showAccountData;
+
+function showTransactions(account_id) {
+	var table = $("#transactionList");
+	table.children().remove();
 	
-	function success(data) {
-		if (data.error) {
-			result.html("Erreur: " + data.reason);
+	$("#account_intro").hide(); $("#account_details").show();
+	
+	function refresh(data) {
+		if (reportError(data)) {
 			return;
 		}
 		
-		result.html("Compte " + data.data.number + " " + data.data.firstname + " " + data.data.lastname + " créé.");
+		var data = data.data;
+		
+		for (var i=0; i < data.length; i++) {
+			var line = $("<tr>").appendTo(table);
+			if (data[i].balance < -10) { 
+				line.addClass("danger");
+			}
+			else {
+				if (data[i].balance <= 0) { 
+					line.addClass("warning");
+				}
+				else { 
+					line.addClass("success");
+				}
+			}
+			
+			var date = new Date(data[i].date);
+			
+			$("<td>").html(data[i].operation).appendTo(line);
+			$("<td>").html(formatDate(date)).appendTo(line);
+			$("<td>").html(data[i].cash + " €").appendTo(line);
+			$("<td>").html(data[i].balance + " €").appendTo(line);
+			
+			if (!data[i].revoked) {
+				$("<td>").append($("<span>").addClass("label").addClass("label-success").html("Non")).appendTo(line);
+			}
+			else {
+				$("<td>").append($("<span>").addClass("label").addClass("label-danger").html("Oui")).appendTo(line);
+			}
+		}
 	}
 	
-	api.account.create(success, firstname, lastname, promo);
+	api.transaction.listByAccount(refresh, account_id);
 }
 
-function displayAccountList () {
-	function success(data) {
-		if (data.error) {
-			result.html("Erreur: " + data.reason);
+function showAccountData(account_id) {
+	current.account_id = account_id;
+
+	function refreshAccount(data) {
+		if (reportError(data)) {
 			return;
 		}
-
-		var table = $('#hisTable');
-		for (var i = 0; i <= data.data.length -1 ; i++) {
-			var line = $("<tr>").appendTo(table);
-			$("<td>").html(data.data[i].number).appendTo(line);
-			$("<td>").html(data.data[i].firstname + " " + data.data[i].lastname).appendTo(line);
-		}
+		var data = data.data;
+		
+		$("#account_id").html("#" + data.id);
+		$("#account_name").html(data.firstname + " " + data.lastname);
+		$("#account_promo").html(data.promo);
+		if (data.staff) { $("#account_staff").show(); }
+		
+		var date = new Date(data.creation);
+		$("#account_creation").html(formatDate(date));
 	}
-
-	api.account.list(success);
+	
+	function refreshBalance(data) {
+		if (reportError(data)) {
+			return;
+		}
+		var data = data.data;
+		
+		$("#account_balance").html(data.balance);
+	}
+	
+	api.account.get(refreshAccount, current.account_id);
+	api.account.balance(refreshBalance, current.account_id, true);
+	
+	showTransactions(account_id);
 }
-
-$("#addAccountForm").submit(function(ev) {
-	ev.preventDefault();
-	addAccount();
-});
-
-displayAccountList();

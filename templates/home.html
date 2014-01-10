@@ -10,14 +10,16 @@
 	{% include 'search.html' %}
 	
 	<div class="row">
-		<div class="col-md-4 col-md-offset-1">
-			
+		<div class="col-md-8">
+			<h3>Transactions</h3><hr />
 			<table class="table table-hover table-bordered">
 				<thead>
 					<tr>
-						<th> Operation n°</th>
-						<th> Montant</th>
-						<th> Solde</th>
+						<th>Operation #</th>
+						<th>Date</th>
+						<th>Montant</th>
+						<th>Solde</th>
+						<th>Révoquée</th>
 					</tr>
 				</thead>
 
@@ -29,36 +31,26 @@
 			</table>
 
 		</div>
-
-		<div class="col-md-4 col-md-offset-1"> 
-			<table class="table">
-				<thead>
-					<th>Produit</th>
-					<th>Quantité</th>
-					<th>Prix unitaire</th>
-					<th>Total</th>
-				</thead>
-				<tbody>
-					<tr>
-						<td>Direct</td>
-						<td>1</td>
-						<td>2.6</td>
-						<td>2.6</td>
-					</tr>
-					<tr>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td>11.5</td>
-					</tr>
-
-				</tbody>
-			</table>
+		
+		<div class="col-md-4">
+			<h3>Bienvenue</h3><hr />
+			<p>Dans <b>Encas</b>, application de gestion de la Maison ISEN.</p>
+			<p>La <b>barre d'outils</b> en haut de la page parmet de <b>rechercher</b> un étudiant par
+				son <b>numéro de compte</b> ou son <b>nom de famille.</b><br />
+			</p>
+			<p>
+				Effectuez des <b>transactions</b> sur le compte sélectionné en rentrant le <b>montant de l'opération</b>
+				dans la barre <b><i>Montant</i></b> en bas de page.<br />
+			</p>
+			<p><b>Si vous faites une erreur</b>, révoquez la transaction puis réeffectuez la.</p>
 		</div>
+
+
 	</div>
 	
 	<div class="row">				
 		<center>
+			<p><b>Solde : <span id="account_balance"> </span>€</b></p>
 			<form id="checkout" class="form-inline" role="form">
 				<div class="form-group">
 					<div class="input-group">

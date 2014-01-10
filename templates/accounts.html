@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block title %} - Comptes{% endblock %}
+
+{% block javascript %}
+<script type="text/javascript" src="/static/js/search.js"></script>
+<script type="text/javascript" src="/static/js/accounts.js"></script>
+{% endblock %}
+
+{% block content %}
+{% include 'search.html' %}
+
+<div class="row">
+	<div id="account_intro" class="col-md-4">
+		<h2>Gestion des comptes</h2><hr />
+		<p>Cette page donne les détails du compte sélectionné ainsi que la liste de
+			toutes les transactions qui ont été effectuées.</p>
+		<p>Sélectionnez un compte dans la barre de recherche pour commencer.</p>
+	</div>
+	<div id="account_details" class="col-md-4" style="display: none;">
+		<h2 id="account_name"></h2><hr />
+		<h3>
+			<span id="account_id" class="label label-primary"></span>
+			<span id="account_promo" class="label label-success"></span>
+			<span id="account_staff" style="display: none;" class="label label-danger"></span>
+		</h3>
+		<h3>Solde : <span id="account_balance"></span>€</h3>
+		<p><b>Date de création :</b> <span id="account_creation"> </span></p>
+		
+		<p>
+			<button class="btn btn-default">Editer</button>
+			<button class="btn btn-danger">Supprimer</button>
+		</p>
+	</div>
+	
+	<div class="col-md-8">
+		<h2>Transactions</h2><hr />
+		
+		<table class="table table-hover table-bordered">
+			<thead>
+				<tr>
+					<th>Operation #</th>
+					<th>Date</th>
+					<th>Montant</th>
+					<th>Solde</th>
+					<th>Révoquée</th>
+				</tr>
+			</thead>
+	
+			<tbody id="transactionList">
+				
+			</tbody>
+		</table>
+
+	</div>
+</div>
+
+{% endblock %}
