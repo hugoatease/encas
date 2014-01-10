@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 #   Encas Sales Management Server
 #   Copyright 2013 - Hugo Caille
 # 
@@ -54,9 +56,9 @@ def load_user(userid):
 def home():
     return render_template("home.html")
 
-@app.route('/accounts')
+@app.route('/admin')
 def accounts():
-    return render_template("accounts.html")
+    return render_template("admin.html")
 
 @app.route('/login', methods=['POST'])
 @errorhandler

@@ -1,72 +1,13 @@
 {% extends 'base.html' %}
 {% block title %} - Caisse{% endblock %}
 
+{% block javascript %}
+<script type="text/javascript" src="/static/js/checkout.js"></script>
+<script type="text/javascript" src="/static/js/search.js"></script>
+{% endblock %}
+
 {% block content %}
-<div class="container">
-	<div id="encasAlert" class="alert alert-danger" style="display: none;"></div>
-	<div class="row">
-		<div class="col-md-1 col-md-offset-1">
-			<button type="button" class="btn btn-large" id="search_nb"><i class="fa fa-th-list"></i></button>
-		</div>
-
-		<div class="col-md-1 col-md-offset-1">
-			<p><button class="btn btn-link"><span id="accountNumber">N°</span></button></p>
-		</div>
-
-		<div class="col-md-4"> 
-			<p><button class="btn btn-link"><span id="name">Nom/pre</span></button></p>
-		</div>
-
-		<div class="col-md-1">
-			<p><button class="btn btn-link"><span id="year">Classe</span></button></p>
-		</div>
-
-		<div class="col-md-1 col-md-offset-1">
-			<button type="button" class="btn btn-large" id="search_name"><i class="fa fa-users"></i></button>
-		</div>
-	</div>
-	
-	<br />
-	
-	<div class="row">
-		<div id="search_number_box" class="col-md-6" style="display: none;">
-			<div class="alert alert-success">
-				<p><b>Recherche par numéro de compte</b></p>
-				<br />
-				<form id="searchByIDForm" class="form-inline" role="form">
-					<div class="form-group">
-						<input class="form-control" id="accountNumberInput" type="text" placeholder="N° de compte"> 
-					</div>
-					<button type="submit" class="btn btn-primary">Recherche</button>
-				</form>
-			</div>
-		</div>
-		
-		<div id="search_name_box" class="col-md-6 col-md-offset-6" style="display: none;">
-			<div class="alert alert-success">
-				<p><b>Recherche par nom</b></p>
-				<br />
-				<form id="searchByNameForm" class="form-inline" role="form">
-					<div class="form-group">
-						<input class="form-control" id="nameInput" type="text" placeholder="Nom à rechercher"> 
-					</div>
-					<button type="submit" class="btn btn-primary">Recherche</button>
-				</form>
-				<br />
-				<table id="searchByNameResults" class="table table-hover table-bordered">
-					<thead>
-						<tr>
-							<th>N°</th>
-							<th>Nom</th>
-							<th>Prénom</th>
-							<th>Promo</th>
-						</tr>
-					</thead>
-					<tbody></tbody>
-				</table>
-			</div>
-		</div>
-	</div>
+	{% include 'search.html' %}
 	
 	<div class="row">
 		<div class="col-md-4 col-md-offset-1">
@@ -129,7 +70,5 @@
 			</form>
 	</div>
 		</center>
-	
-</div>
 
 {% endblock %}
