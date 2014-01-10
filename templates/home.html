@@ -29,7 +29,7 @@
 	<br />
 	
 	<div class="row">
-		<div id="search_number_box" class="col-md-4" style="display: none;">
+		<div id="search_number_box" class="col-md-6" style="display: none;">
 			<div class="alert alert-success">
 				<p><b>Recherche par numéro de compte</b></p>
 				<br />
@@ -42,9 +42,28 @@
 			</div>
 		</div>
 		
-		<div id="search_name_box" class="col-md-4 col-md-offset-8" style="display: none;">
+		<div id="search_name_box" class="col-md-6 col-md-offset-6" style="display: none;">
 			<div class="alert alert-success">
 				<p><b>Recherche par nom</b></p>
+				<br />
+				<form id="searchByNameForm" class="form-inline" role="form">
+					<div class="form-group">
+						<input class="form-control" id="nameInput" type="text" placeholder="Nom à rechercher"> 
+					</div>
+					<button type="submit" class="btn btn-primary">Recherche</button>
+				</form>
+				<br />
+				<table id="searchByNameResults" class="table table-hover table-bordered">
+					<thead>
+						<tr>
+							<th>N°</th>
+							<th>Nom</th>
+							<th>Prénom</th>
+							<th>Promo</th>
+						</tr>
+					</thead>
+					<tbody></tbody>
+				</table>
 			</div>
 		</div>
 	</div>
