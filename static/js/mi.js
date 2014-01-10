@@ -203,3 +203,9 @@ $("#search_name").click(function(ev) {
 	ev.preventDefault();
 	boxes.click("name");
 });
+
+$("#searchByNameForm #nameInput").keyup(function(ev) {
+	if ($("#searchByNameForm #nameInput").val().length > 2) {
+		searchAccountByName();
+	}
+});
