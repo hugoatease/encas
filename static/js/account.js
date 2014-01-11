@@ -7,14 +7,24 @@ var accountModel = {
 	date: ko.observable(),
 	balance: ko.observable(),
 	
+	edited: {
+		firstname: ko.observable(),
+		lastname: ko.observable(),
+		promo: ko.observable(),
+	},
+	
 	transactions: ko.observableArray(),
 	
-	show_intro: ko.observable(true),
+	visible_intro: ko.observable(true),
+	visible_account_deletion: ko.observable(false),
+	visible_account_edition: ko.observable(false),
 	
 	showAccountData: function (account_id) {
 		current.account_id = account_id;
 		
-		this.show_intro(false);
+		this.visible_intro(false);
+		this.visible_account_deletion(false);
+		this.visible_account_edition(false);
 	
 		function refreshAccount(data) {
 			if (reportError(data)) {
@@ -73,6 +83,25 @@ var accountModel = {
 		}
 		
 		api.transaction.listByAccount(refresh.bind(accountModel), account_id, true);
+	},
+	
+	showEditor : function(target) {
+		accountModel.visible_account_edition(true);
+		this.edited.firstname(this.firstname());
+		this.edited.lastname(this.lastname());
+		this.edited.promo(this.promo());
+	},
+	
+	edit : function(target) {
+		function refresh(data) {
+			if (reportError(data)) {
+				return;
+			}
+			var data = data.data;
+			accountModel.showAccountData(data.id);
+		}
+		
+		api.account.edit(refresh, current.account_id, this.edited.firstname(), this.edited.lastname(), this.edited.promo());
 	},
 };
 

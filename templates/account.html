@@ -13,14 +13,14 @@
 {% include 'search.html' %}
 
 <div class="row">
-	<div data-bind="visible: show_intro" class="col-md-4">
+	<div data-bind="visible: visible_intro" class="col-md-4">
 		<h2>Gestion des comptes</h2><hr />
 		<p>Cette page donne les détails du compte sélectionné ainsi que la liste de
 			toutes les transactions qui ont été effectuées.</p>
 		<p>Sélectionnez un compte dans la barre de recherche pour commencer.</p>
 	</div>
 	
-	<div data-bind="ifnot: show_intro" class="col-md-4">
+	<div data-bind="ifnot: visible_intro" class="col-md-4">
 		<h2 data-bind="text: fullname"></h2><hr />
 		<h3>
 			<span data-bind="text: id" class="label label-primary"></span>
@@ -31,9 +31,49 @@
 		<p><b>Date de création :</b> <span data-bind="text: date"> </span></p>
 		
 		<p>
-			<button class="btn btn-default">Editer</button>
-			<button class="btn btn-danger">Supprimer</button>
+			<button data-bind="click: showEditor" class="btn btn-default">Editer</button>
+			<!--<button data-bind="click: function() { accountModel.visible_account_deletion(true) }" class="btn btn-danger">Supprimer</button>-->
 		</p>
+		
+		<div data-bind="visible: visible_account_edition" class="alert alert-info">
+			<p><b>Editer les informations</b></p><br />
+			<form data-bind="submit: edit">
+				<div class="form-horizontal" role="form">
+					<div class="form-group">
+						<label class="col-sm-3 control-label">Nom</label>
+						<div class="col-sm-9">
+							<input data-bind="value: edited.firstname" type="text" class="form-control" />
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-3 control-label">Prénom</label>
+						<div class="col-sm-9">
+							<input data-bind="value: edited.lastname" type="text" class="form-control" />
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-3 control-label">Promotion</label>
+						<div class="col-sm-9">
+							<input data-bind="value: edited.promo" type="text" class="form-control" />
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-9 col-sm-offset-3">
+							<button type="submit" class="btn btn-primary">Modifier</button>
+							<button data-bind="click: function() { accountModel.visible_account_edition(false) }" class="btn btn-default">Annuler</button>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+		
+		<div data-bind="visible: visible_account_deletion" class="alert alert-danger">
+			<p><b>Suppression de compte</b></p>
+			<p>Etes vous sur de vouloir supprimer le compte sélectionné ?</p>
+			<p><span data-bind="text: id"></span> - <span data-bind="text: fullname"></span></p>
+			<p><button data-bind="click: function() { accountModel.visible_account_deletion(false) }" class="btn btn-primary">Non, je garde le compte</button></p>
+			<p><button class="btn btn-danger">Oui, je supprime le compte</button></p>
+		</div>
 	</div>
 	
 	<div class="col-md-8">

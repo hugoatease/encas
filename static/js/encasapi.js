@@ -40,7 +40,7 @@ var api = {
 			jQuery.post('/account/create', data, callback);
 		},
 		
-		edit : function(calllback, account_id, firstname, lastname, promo) {
+		edit : function(callback, account_id, firstname, lastname, promo) {
 			var url = '/account/' + account_id + '/edit';
 			var data = {'firstname' : firstname, 'lastname' : lastname, 'promo' : promo};
 			jQuery.post(url, data, callback);
