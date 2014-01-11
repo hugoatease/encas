@@ -124,13 +124,6 @@ def editAccount(id):
     else:
         raise MissingFieldsError(form.errors.keys())
 
-@app.route('/account/<id>/balance', methods=['GET'])
-@errorhandler
-def getBalance(id):
-    id = convert(int, id)
-    
-    return {'balance' : transaction.getBalance(id)}
-
 @app.route('/account/<id>/calculate', methods=['GET'])
 @errorhandler
 def calculateBalance(id):

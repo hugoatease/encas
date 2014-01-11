@@ -28,25 +28,20 @@ def freeNumber():
         result = session.query(Transaction).order_by("operation desc").first()
         return result.operation + 1
 
-def getByAccount(account_id, max=None):
+def getByAccount(account_id, max=None, exclude_revoked=False):
     account.get(account_id) # Raises exception if account doesn't exist.
-    query = session.query(Transaction).filter_by(account=account_id) \
-            .order_by("operation desc")
+    query = session.query(Transaction).filter_by(account=account_id)
+    if exclude_revoked:
+        query = query.filter_by(revoked=False)
+    query = query.order_by("operation desc")
     
     if max is not None:
         query = query.limit(max)
     
     return query.all()
 
-def getBalance(account_id):
-    transactions = getByAccount(account_id, 1)
-    if len(transactions) == 0:
-        return 0
-
-    return transactions[0].balance
-
 def calculateBalance(account_id):
-    transactions = getByAccount(account_id, None)
+    transactions = getByAccount(account_id, None, True)
     
     cash = 0
     for transaction in transactions:

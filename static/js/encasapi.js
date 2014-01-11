@@ -46,13 +46,8 @@ var api = {
 			jQuery.post(url, data, callback);
 		},
 		
-		balance : function(callback, account_id, calculate) {
-			if (calculate === false || calculate === undefined) {
-				var url = '/account/' + account_id + '/balance';
-			}
-			else {
-				var url = '/account/' + account_id + '/calculate';
-			}
+		balance : function(callback, account_id) {
+			var url = '/account/' + account_id + '/calculate';
 			jQuery.get(url, callback);
 		}
 	},
