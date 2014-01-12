@@ -16,58 +16,65 @@
 #   You should have received a copy of the GNU General Public License
 #   along with Encas.  If not, see <http://www.gnu.org/licenses/>.
 
-from database import Account, session
-from sqlalchemy import desc
+from database import session
+from database import Account as AccountModel
 from sqlalchemy.orm.exc import NoResultFound
 from errors import ApiError
 
-def freeNumber():
-    if session.query(Account).count() == 0:
-        return 1
-    else:
-        result = session.query(Account).order_by("number desc").first()
-        return result.number + 1
+class Account:
+    @staticmethod
+    def available():
+        if session.query(AccountModel).count() == 0:
+            return 1
+        else:
+            result = session.query(AccountModel).order_by("number desc").first()
+            return result.number + 1
 
-def create(firstname, lastname, promo):
-    account = Account(number=freeNumber(), firstname=firstname, lastname=lastname, promo=promo)
-    session.add(account)
-    session.commit()
-    
-    return account
+    @classmethod
+    def create(self, firstname, lastname, promo):
+        account = AccountModel(number=self.available(), firstname=firstname, lastname=lastname, promo=promo)
+        session.add(account)
+        session.commit()
 
-def get(id):
-    account = session.query(Account).get(id)
-    if account is None:
-        raise ApiError("Account not found")
-    return account
+        return account
 
-def delete(id):
-    account = get(id)
-    session.delete(account)
-    session.commit()
-    
-    return account
+    @staticmethod
+    def get(id):
+        account = session.query(AccountModel).get(id)
+        if account is None:
+            raise ApiError("Account not found")
+        return account
 
-def getByNumber(number):
-    try:
-        return session.query(Account).filter_by(number=number).one()
-    except NoResultFound:
-        raise ApiError("Account not found")
+    @staticmethod
+    def getByNumber(number):
+        try:
+            return session.query(AccountModel).filter_by(number=number).one()
+        except NoResultFound:
+            raise ApiError("Account not found")
 
-def search(firstname):
-    filter = firstname + '%'
-    return session.query(Account).filter(Account.firstname.ilike(filter)).all()
+    @staticmethod
+    def search(firstname):
+        filter = firstname + '%'
+        return session.query(AccountModel).filter(AccountModel.firstname.ilike(filter)).all()
 
-def list():
-    return session.query(Account).all()
+    @staticmethod
+    def list():
+        return session.query(AccountModel).all()
 
-def edit(id, fields):
-    account = get(id)
-    allowed = ['firstname', 'lastname', 'promo']
-    
-    for key in fields.keys():
-        if key in allowed:
-            setattr(account, key, fields[key])
-    
-    session.commit()
-    return account
+    def __init__(self, id=None, number=None):
+        if id is not None:
+            self.account = self.get(id)
+        elif number is not None:
+            self.account = self.getByNumber(number)
+        else:
+            raise ApiError("You must provide an account ID or number")
+
+    def edit(self, fields):
+        allowed = ['firstname', 'lastname', 'promo']
+
+        for key in fields.keys():
+            if key in allowed:
+                setattr(self.account, key, fields[key])
+
+        session.commit()
+        return self.account

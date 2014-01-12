@@ -16,68 +16,77 @@
 #   You should have received a copy of the GNU General Public License
 #   along with Encas.  If not, see <http://www.gnu.org/licenses/>.
 
-from database import User, session
+from database import session
+from database import User as UserModel
 
-def create(username, password):
-    user = User(username=username, password=password)
-    session.add(user)
-    session.commit()
-    return user
+class User:
+    @staticmethod
+    def create(username, password):
+        user = UserModel(username=username, password=password)
+        session.add(user)
+        session.commit()
+        return user
 
-def login(username, password):
-    try:
-        user = session.query(User).filter_by(username=username, password=password).one()
-    except:
-        return None
-    
-    if user.username != username or user.password != password:
-        return None
-    
-    user.update_token()
-    return user
+    @staticmethod
+    def login(username, password):
+        try:
+            user = session.query(UserModel).filter_by(username=username, password=password).one()
+        except:
+            return None
 
-def get(user_id):
-    return session.query(User).get(user_id)
+        if user.username != username or user.password != password:
+            return None
 
-def getByUsername(username):
-    return session.query(User).filter_by(username=username).one()
+        user.update_token()
+        return user
 
-def remove(id):
-    user = session.query(User).get(id)
-    user.suspended = True
-    session.add(user)
-    session.commit()
-    return True
+    @staticmethod
+    def get(user_id):
+        return session.query(UserModel).get(user_id)
 
-def makeAdmin(id):
-    user = session.query(User).get(id)
-    user.admin = True
-    session.add(user)
-    session.commit()
-    return user
+    @staticmethod
+    def getByUsername(username):
+        return session.query(UserModel).filter_by(username=username).one()
 
-def removeAdmin(id):
-    user = session.query(User).get(id)
-    user.admin = False
-    session.add(user)
-    session.commit()
-    return user
+    @staticmethod
+    def list():
+        return session.query(UserModel).all()
 
-def list():
-    return session.query(User).all()
+    @staticmethod
+    def getByToken(token):
+        q = session.query(User).filter_by(token=token)
+        if q.count() == 0:
+            return None
+        return q.one()
 
-def getByToken(token):
-    q = session.query(User).filter_by(token=token)
-    if q.count() == 0:
-        return None
-    return q.one()
+    @classmethod
+    def is_authorized(self, token, admin=False):
+        user = self.getByToken(token)
+        if user is None:
+            return False
 
-def is_authorized(token, admin=False):
-    user = getByToken(token)
-    if user is None:
-        return False
-    
-    if admin and not user.admin:
-        return False
-    
-    return True
+        if admin and not user.admin:
+            return False
+
+        return True
+
+    def __init__(self, id):
+        self.user = self.get(id)
+
+    def remove(self):
+        self.user.suspended = True
+        session.add(self.user)
+        session.commit()
+        return True
+
+    def makeAdmin(self):
+        self.user.admin = True
+        session.add(self.user)
+        session.commit()
+        return self.user
+
+    def removeAdmin(self):
+        self.user.admin = False
+        session.add(self.user)
+        session.commit()
+        return self.user

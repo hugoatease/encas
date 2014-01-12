@@ -30,7 +30,7 @@ login_manager.init_app(app)
 login_manager.login_view = 'login'
 
 from common import convert
-from model import account, transaction, user
+from model import Account, Transaction, User
 from errors import errorhandler, ApiError, MissingFieldsError
 import forms
 
@@ -38,19 +38,19 @@ def unauthorized():
     return jsonify({'error' : 'True', 'reason' : 'Request is unauthenticated.'})
 login_manager.unauthorized_handler(unauthorized)
 
-class User(UserMixin):
+class UserMix(UserMixin):
     def __init__(self, id):
         self.id = id
     
     def is_active(self):
-        return user.is_authorized(self.id)
+        return User.is_authorized(self.id)
 
     def is_authenticated(self):
-        return user.is_authorized(self.id)
+        return User.is_authorized(self.id)
 
 @login_manager.user_loader
 def load_user(userid):
-    return User(userid)
+    return UserMix(userid)
 
 @app.route('/')
 def home():
@@ -68,9 +68,9 @@ def admin():
 @errorhandler
 def login():
     fields = parseData({'username', 'password'})
-    result = user.login(fields['username'], fields['password'])
+    result = User.login(fields['username'], fields['password'])
     if result is not None:
-        login_user(User(result.token))
+        login_user(UserMix(result.token))
         return result.serialize()
     raise ApiError("Login failed : provided credentials are wrong.")
 
@@ -83,32 +83,32 @@ def logout():
 @app.route('/account/list', methods=['GET'])
 @errorhandler
 def listAccounts():
-    accounts = account.list()
+    accounts = Account.list()
     return [acc.serialize() for acc in accounts]
 
 @app.route('/account/<account_id>', methods=['GET'])
 @errorhandler
 def getAccount(account_id):
     account_id = convert(int, account_id)
-    return account.get(account_id).serialize()
+    return Account.get(account_id).serialize()
 
 @app.route('/account/number/<number>', methods=['GET'])
 @errorhandler
 def getAccountByNumber(number):
     number = convert(int, number)
-    return account.getByNumber(number).serialize()
+    return Account.getByNumber(number).serialize()
 
 @app.route('/account/search/<firstname>', methods=['GET'])
 @errorhandler
 def searchAccount(firstname):
-    return [acc.serialize() for acc in account.search(firstname)]
+    return [acc.serialize() for acc in Account.search(firstname)]
 
 @app.route('/account/create', methods=['POST'])
 @errorhandler
 def createAccount():
     form = forms.AccountCreationForm()
     if form.validate_on_submit():
-        return account.create(form.firstname.data, form.lastname.data, form.promo.data).serialize()
+        return Account.create(form.firstname.data, form.lastname.data, form.promo.data).serialize()
     else:
         raise MissingFieldsError(form.errors.keys())
 
@@ -120,7 +120,7 @@ def editAccount(id):
     form = forms.AccountEditionForm()
     if form.validate_on_submit():
         fields = {'firstname' : form.firstname.data, 'lastname' : form.lastname.data, 'promo' : form.promo.data}
-        return account.edit(id, fields).serialize()
+        return Account(id=id).edit(fields).serialize()
     else:
         raise MissingFieldsError(form.errors.keys())
 
@@ -128,18 +128,18 @@ def editAccount(id):
 @errorhandler
 def calculateBalance(id):
     id = convert(int, id)
-    return {'balance' : transaction.calculateBalance(id)}
+    return {'balance' : Transaction.calculateBalance(id)}
 
 @app.route('/account/<int:account_id>/transactions', methods=['GET'])
 @errorhandler
 def getTransactions(account_id):
-    transactions = transaction.getByAccount(account_id, 5)
+    transactions = Transaction.getByAccount(account_id, 5)
     return [tr.serialize() for tr in transactions]
 
 @app.route('/account/<int:account_id>/transactions/all', methods=['GET'])
 @errorhandler
 def getAllTransactions(account_id):
-    transactions = transaction.getByAccount(account_id, None)
+    transactions = Transaction.getByAccount(account_id, None)
     return [tr.serialize() for tr in transactions]
 
 @app.route('/transaction/add', methods=['POST'])
@@ -147,7 +147,7 @@ def getAllTransactions(account_id):
 def addTransaction():
     form = forms.TransactionAddForm()
     if form.validate_on_submit():
-        return transaction.add(form.account_id.data, form.cash.data).serialize()
+        return Transaction.add(form.account_id.data, form.cash.data).serialize()
     else:
         raise MissingFieldsError(form.errors.keys())
     
@@ -156,7 +156,7 @@ def addTransaction():
 @errorhandler
 def revokeTransaction(id):
     id = convert(int, id)
-    return transaction.revoke(id).serialize()
+    return Transaction(id).revoke().serialize()
 
 if __name__ == '__main__':
     app.run()

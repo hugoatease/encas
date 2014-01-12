@@ -16,65 +16,75 @@
 #   You should have received a copy of the GNU General Public License
 #   along with Encas.  If not, see <http://www.gnu.org/licenses/>.
 
-from database import Transaction, session
-from sqlalchemy import desc
+from database import session
+from database import Transaction as TransactionModel
 
-import account
+from account import Account
 
-def freeNumber():
-    if session.query(Transaction).count() == 0:
-        return 1
-    else:
-        result = session.query(Transaction).order_by("operation desc").first()
-        return result.operation + 1
+class Transaction:
+    @staticmethod
+    def available():
+        if session.query(TransactionModel).count() == 0:
+            return 1
+        else:
+            result = session.query(TransactionModel).order_by("operation desc").first()
+            return result.operation + 1
 
-def getByAccount(account_id, max=None, exclude_revoked=False):
-    account.get(account_id) # Raises exception if account doesn't exist.
-    query = session.query(Transaction).filter_by(account=account_id)
-    if exclude_revoked:
-        query = query.filter_by(revoked=False)
-    query = query.order_by("operation desc")
-    
-    if max is not None:
-        query = query.limit(max)
-    
-    return query.all()
+    @staticmethod
+    def get(transaction_id):
+        return session.query(TransactionModel).get(transaction_id)
 
-def calculateBalance(account_id):
-    transactions = getByAccount(account_id, None, True)
-    
-    cash = 0
-    for transaction in transactions:
-        cash += transaction.cash
-    
-    return cash
+    @staticmethod
+    def getByAccount(account_id, max=None, exclude_revoked=False):
+        Account.get(account_id) # Raises exception if account doesn't exist.
+        query = session.query(TransactionModel).filter_by(account=account_id)
+        if exclude_revoked:
+            query = query.filter_by(revoked=False)
+        query = query.order_by("operation desc")
 
-def add(account_id, cash):
-    try:
-        last = getByAccount(account_id, 1)[0]
-    except:
-        last = None
-    
-    if last is None:
-        balance  = cash
-    else:
-        balance = last.balance + cash
-    
-    transaction = Transaction(account=account_id, operation=freeNumber(), cash=cash, balance=balance)
-    session.add(transaction)
-    session.commit()
-    return transaction
+        if max is not None:
+            query = query.limit(max)
 
-def revoke(transaction_id):
-    transaction = session.query(Transaction).get(transaction_id)
-    transaction.revoked = True
-    session.add(transaction)
-    session.commit()
-    return transaction
+        return query.all()
 
-def unrevoke(transaction_id):
-    transaction = session.query(Transaction).get(transaction_id)
-    transaction.revoked = False
-    session.add(transaction)
-    session.commit()
-    return transaction
+    @classmethod
+    def calculateBalance(self, account_id):
+        transactions = self.getByAccount(account_id, None, True)
+
+        cash = 0
+        for transaction in transactions:
+            cash += transaction.cash
+
+        return cash
+
+    @classmethod
+    def add(self, account_id, cash):
+        try:
+            last = self.getByAccount(account_id, 1)[0]
+        except:
+            last = None
+
+        if last is None:
+            balance  = cash
+        else:
+            balance = last.balance + cash
+
+        transaction = TransactionModel(account=account_id, operation=self.available(), cash=cash, balance=balance)
+        session.add(transaction)
+        session.commit()
+        return transaction
+
+    def __init__(self, transaction_id):
+        self.transaction = self.get(transaction_id)
+
+    def revoke(self):
+        self.transaction.revoked = True
+        session.add(self.transaction)
+        session.commit()
+        return self.transaction
+
+    def unrevoke(self):
+        self.transaction.revoked = False
+        session.add(self.transaction)
+        session.commit()
+        return self.transaction
