@@ -56,7 +56,7 @@ def getByNumber(number):
 
 def search(firstname):
     filter = firstname + '%'
-    return session.query(Account).filter(Account.firstname.like(filter)).all()
+    return session.query(Account).filter(Account.firstname.ilike(filter)).all()
 
 def list():
     return session.query(Account).all()
