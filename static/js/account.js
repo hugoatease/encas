@@ -10,10 +10,8 @@ var accountModel = {
 	edited: {
 		firstname: ko.observable(),
 		lastname: ko.observable(),
-		promo: ko.observable(),
+		promo: ko.observable()
 	},
-	
-	transactions: ko.observableArray(),
 	
 	visible_intro: ko.observable(true),
 	visible_account_deletion: ko.observable(false),
@@ -54,42 +52,12 @@ var accountModel = {
 		api.account.get(refreshAccount.bind(accountModel), current.account_id);
 		api.account.balance(refreshBalance.bind(accountModel), current.account_id, true);
 	},
-	
-	getTransactions: function(account_id) {
-		function refresh(data) {
-			if (reportError(data)) {
-				return;
-			}
-			
-			var data = data.data;
-			
-			for (var i=0; i < data.length; i++) {
-				data[i].date = formatDate(new Date(data[i].date));
-				
-				if (data[i].balance < -10) { 
-					data[i]['state'] = "danger";
-				}
-				else {
-					if (data[i].balance <= 0) { 
-						data[i]['state'] = "warning";
-					}
-					else { 
-						data[i]['state'] = "success";
-					}
-				}
-			}
-	
-			this.transactions(data);
-		}
-		
-		api.transaction.listByAccount(refresh.bind(accountModel), account_id, true);
-	},
-	
+
 	showEditor : function(target) {
 		accountModel.visible_account_edition(true);
-		this.edited.firstname(this.firstname());
-		this.edited.lastname(this.lastname());
-		this.edited.promo(this.promo());
+		accountModel.edited.firstname(accountModel.firstname());
+		accountModel.edited.lastname(accountModel.lastname());
+		accountModel.edited.promo(accountModel.promo());
 	},
 	
 	edit : function(target) {
@@ -101,15 +69,10 @@ var accountModel = {
 			accountModel.showAccountData(data.id);
 		}
 		
-		api.account.edit(refresh, current.account_id, this.edited.firstname(), this.edited.lastname(), this.edited.promo());
-	},
+		api.account.edit(refresh, current.account_id, accountModel.edited.firstname(), accountModel.edited.lastname(), accountModel.edited.promo());
+	}
 };
 
 accountModel.fullname = ko.computed(function() {
 	return accountModel.lastname() + " " + accountModel.firstname();
 });
-
-current.search_callback = function(account_id) {
-	accountModel.showAccountData.bind(accountModel)(account_id);
-	accountModel.getTransactions.bind(accountModel)(account_id);
-};

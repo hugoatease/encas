@@ -2,10 +2,25 @@
 {% block title %} - Caisse{% endblock %}
 
 {% block javascript %}
-<script type="text/javascript" src="/static/js/checkout.js"></script>
 <script type="text/javascript" src="/static/js/search.js"></script>
+<script type="text/javascript" src="/static/js/checkout.js"></script>
+<script type="text/javascript" src="/static/js/transaction.js"></script>
 <script type="text/javascript">
-	ko.applyBindings(checkoutModel);
+    var viewModels = {
+        checkout : checkoutModel,
+        transaction : transactionModel,
+    };
+
+    viewModels.checkout.make_checkout = function() {
+            checkoutModel.checkout(transactionModel.getTransactions);
+    }
+
+	ko.applyBindings(viewModels);
+
+    current.search_callback = function(account_id) {
+        transactionModel.getTransactions(account_id);
+        checkoutModel.getBalance(account_id);
+    };
 </script>
 {% endblock %}
 
@@ -34,19 +49,19 @@
 
 	</div>
 	
-	<div class="row">				
+	<div data-bind="with: checkout" class="row">
 		<center>
 			<p><b>Solde : <span data-bind="text: balance"> </span>€</b></p>
-			<form data-bind="submit: checkout" id="checkout" class="form-inline" role="form">
+			<form data-bind="submit: make_checkout" id="checkout" class="form-inline" role="form">
 				<div class="form-group">
 					<div class="input-group">
-						<input data-bind="value: checkout_price" class="form-control" type="text" placeholder="Montant"> 
+						<input data-bind="value: checkout_price" class="form-control" type="text" placeholder="Montant">
 						<span class="input-group-addon">€</span>
 					</div>
 				</div>
 				<button type="submit" class="btn btn-primary">Go !</button>
 			</form>
+        </center>
 	</div>
-		</center>
 
 {% endblock %}
