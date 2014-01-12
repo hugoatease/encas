@@ -1,9 +1,5 @@
 from getpass import getpass
-from model.database import createTables
 from model import user
-
-print "Initializing database"
-createTables()
 
 print "Administrator account creation"
 username = raw_input("Username: ")
