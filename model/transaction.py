@@ -23,11 +23,11 @@ from account import Account
 
 class Transaction:
     @staticmethod
-    def available():
-        if session.query(TransactionModel).count() == 0:
+    def available(account_id):
+        if session.query(TransactionModel).filter_by(account=account_id).count() == 0:
             return 1
         else:
-            result = session.query(TransactionModel).order_by("operation desc").first()
+            result = session.query(TransactionModel).filter_by(account=account_id).order_by("operation desc").first()
             return result.operation + 1
 
     @staticmethod
@@ -69,7 +69,7 @@ class Transaction:
         else:
             balance = last.balance + cash
 
-        transaction = TransactionModel(account=account_id, operation=self.available(), cash=cash, balance=balance)
+        transaction = TransactionModel(account=account_id, operation=self.available(account_id), cash=cash, balance=balance)
         session.add(transaction)
         session.commit()
         return transaction
