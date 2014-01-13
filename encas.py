@@ -25,7 +25,7 @@ app.debug = True
 app.config['WTF_CSRF_ENABLED'] = False
 
 from flask.ext.login import login_required, current_user, login_user, logout_user
-from login import login_manager, UserHandler
+from login import login_manager, UserHandler, login_required_api, admin_required
 login_manager.login_view = 'login'
 login_manager.init_app(app)
 
@@ -51,7 +51,6 @@ def admin():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    print current_user.is_authenticated()
     form = forms.LoginForm()
     if forms.SellerLoginForm().validate_on_submit():
         login_user(UserHandler(seller=True))
@@ -64,7 +63,10 @@ def login():
         return redirect(request.args.get("next") or url_for("home"))
 
     else:
-        return render_template("login.html")
+        credentials = False
+        if len(form.errors) > 0:
+            credentials = True
+        return render_template("login.html", credentials=credentials)
 
 @app.route('/logout')
 @login_required
@@ -73,34 +75,34 @@ def logout():
     return redirect('/')
 
 @app.route('/account/list', methods=['GET'])
-@login_required
+@login_required_api
 @errorhandler
 def listAccounts():
     accounts = Account.list()
     return [acc.serialize() for acc in accounts]
 
 @app.route('/account/<account_id>', methods=['GET'])
-@login_required
+@login_required_api
 @errorhandler
 def getAccount(account_id):
     account_id = convert(int, account_id)
     return Account.get(account_id).serialize()
 
 @app.route('/account/number/<number>', methods=['GET'])
-@login_required
+@login_required_api
 @errorhandler
 def getAccountByNumber(number):
     number = convert(int, number)
     return Account.getByNumber(number).serialize()
 
 @app.route('/account/search/<firstname>', methods=['GET'])
-@login_required
+@login_required_api
 @errorhandler
 def searchAccount(firstname):
     return [acc.serialize() for acc in Account.search(firstname)]
 
 @app.route('/account/create', methods=['POST'])
-@login_required
+@login_required_api
 @errorhandler
 def createAccount():
     form = forms.AccountCreationForm()
@@ -110,7 +112,7 @@ def createAccount():
         raise MissingFieldsError(form.errors.keys())
 
 @app.route('/account/<id>/edit', methods=['POST'])
-@login_required
+@login_required_api
 @errorhandler
 def editAccount(id):
     id = convert(int, id)
@@ -123,36 +125,37 @@ def editAccount(id):
         raise MissingFieldsError(form.errors.keys())
 
 @app.route('/account/<id>/delete', methods=['POST'])
-@login_required
+@login_required_api
 @errorhandler
+@admin_required
 def deleteAccount(id):
     id = convert(int, id)
 
     return Account(id=id).delete().serialize()
 
 @app.route('/account/<id>/calculate', methods=['GET'])
-@login_required
+@login_required_api
 @errorhandler
 def calculateBalance(id):
     id = convert(int, id)
     return {'balance' : Transaction.calculateBalance(id)}
 
 @app.route('/account/<int:account_id>/transactions', methods=['GET'])
-@login_required
+@login_required_api
 @errorhandler
 def getTransactions(account_id):
     transactions = Transaction.getByAccount(account_id, 5)
     return [tr.serialize() for tr in transactions]
 
 @app.route('/account/<int:account_id>/transactions/all', methods=['GET'])
-@login_required
+@login_required_api
 @errorhandler
 def getAllTransactions(account_id):
     transactions = Transaction.getByAccount(account_id, None)
     return [tr.serialize() for tr in transactions]
 
 @app.route('/transaction/add', methods=['POST'])
-@login_required
+@login_required_api
 @errorhandler
 def addTransaction():
     form = forms.TransactionAddForm()
@@ -163,7 +166,7 @@ def addTransaction():
     
 
 @app.route('/transaction/<id>/revoke', methods=['POST'])
-@login_required
+@login_required_api
 @errorhandler
 def revokeTransaction(id):
     id = convert(int, id)

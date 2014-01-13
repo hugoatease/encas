@@ -16,8 +16,11 @@
 #   You should have received a copy of the GNU General Public License
 #   along with Encas.  If not, see <http://www.gnu.org/licenses/>.
 
+from functools import wraps
 from model import User
-from flask.ext.login import LoginManager, UserMixin
+from errors import ApiError
+from flask import jsonify, current_app
+from flask.ext.login import LoginManager, UserMixin, login_required, current_user
 login_manager = LoginManager()
 
 class UserHandler(UserMixin):
@@ -61,9 +64,30 @@ class UserHandler(UserMixin):
             return self
         return None
 
+def json_unauthorized():
+    return jsonify({'error' : True, 'reason' : 'You\'re not logged in.'})
+
 @login_manager.user_loader
 def load_user(id):
     if id == "seller":
         return UserHandler(seller=True).export()
 
     return UserHandler(id=id).export()
+
+def login_required_api(func):
+    @wraps(func)
+    def decorated_view(*args, **kwargs):
+        if current_app.login_manager._login_disabled:
+            return func(*args, **kwargs)
+        elif not current_user.is_authenticated():
+            return json_unauthorized()
+        return func(*args, **kwargs)
+    return decorated_view
+
+def admin_required(func):
+    @wraps(func)
+    def decorated_func(*args, **kwargs):
+        if not current_user.is_admin():
+            raise ApiError("Forbidden action : you must have administrator rights")
+        func(*args, **kwargs)
+    return decorated_func

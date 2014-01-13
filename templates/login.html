@@ -49,6 +49,15 @@
                     <hr />
 
                     <h3>Administrateur</h3>
+
+                    {% if credentials %}
+                    <div class="alert alert-warning">
+                        <p><b>Erreur :</b> identifiants incorrects</p>
+                        <p>Vérifiez que vous avez bien rentré les bons identifiants pour vous connecter.</p>
+                        <p>Si vous êtes vendeur, utilisez l'accès vendeur.</p>
+                    </div>
+                    {% endif %}
+
                     <form role="form" action="/login" method="POST">
                         <div class="form-group">
                             <label for="username">Nom d'utilisateur</label>
