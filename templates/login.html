@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="fr">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Maison ISEN - Connexion</title>
+		<link href="/static/css/bootstrap.min.css" rel="stylesheet" media="screen">
+		<link href="/static/css/font-awesome.min.css" rel="stylesheet">
+	</head>
+
+    <body>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8">
+                    <h1>Bienvenue à la Maison ISEN</h1><hr />
+
+                    <div class="row">
+                        <div class="col-md-11">
+                            <h3><i class="fa fa-users fa-lg"> </i> Gérez les comptes</h3>
+                            <p>L'interface de gestion des comptes vous permet de visionner les détails d'un compte,
+                            de l'éditer, de le supprimer et de voir ses transactions associées de manière simple.</p>
+
+                            <h3><i class="fa fa-exchange fa-lg"> </i> Effectuez des transactions</h3>
+                            <p>La caisse vous permet de provisionner un compte et d'effectuer des opérations.<br />
+                            En cas d'erreur, il est toujours possible de révoquer une transaction.</p>
+
+                            <h3><i class="fa fa-cog fa-lg"> </i> Administrez les comptes</h3>
+                            <p>Encas offre des fonctions d'administration couvrant les comptes et les transactions
+                            et vous permettant d'avoir une vue d'ensemble sur l'instance installée.</p>
+
+                            <h3><i class="fa fa-github fa-lg"> </i> Open Source</h3>
+                            <p>Encas est un logiciel libre sous licence GNU GPL v3.<br />
+                            Vous pouvez consulter son code sur <a href="https://github.com/hugoatease/encas">GitHub</a>
+                                et nous faire part de vos suggestions ou de vos rapports de bugs.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <h1>Connexion</h1><hr />
+                    <p>Accédez à Encas en tant que vendeur ou entrez les identifiants de votre compte administrateur
+                    pour continuer.</p>
+
+                    <form action="/login" method="POST">
+                        <input type="hidden" name="seller_access" value="true" />
+                        <center><button class="btn btn-primary btn-lg">Accès vendeur</button></center>
+                    </form>
+                    <hr />
+
+                    <h3>Administrateur</h3>
+                    <form role="form" action="/login" method="POST">
+                        <div class="form-group">
+                            <label for="username">Nom d'utilisateur</label>
+                            <input type="text" class="form-control" id="username" name="username" placeholder="Nom d'utilisateur" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="password">Mot de passe</label>
+                            <input type="password" class="form-control" id="password" name="password" placeholder="Mot de passe" />
+                        </div>
+
+                        <button type="submit" class="btn btn-default btn-lg">Connexion</button>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+
+        {% include 'footer.html' %}
+    </body>
+</html>

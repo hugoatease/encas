@@ -24,86 +24,83 @@ app.secret_key = "z5f6rfqb1u5o8m4lk,13wr8er78h1d5x5dgd4568rh87i8ys3c2z7811369417
 app.debug = True
 app.config['WTF_CSRF_ENABLED'] = False
 
-from flask.ext.login import LoginManager, UserMixin, login_required, current_user, login_user, logout_user
-login_manager = LoginManager()
-login_manager.init_app(app)
+from flask.ext.login import login_required, current_user, login_user, logout_user
+from login import login_manager, UserHandler
 login_manager.login_view = 'login'
+login_manager.init_app(app)
 
 from common import convert
 from model import Account, Transaction, User
 from errors import errorhandler, ApiError, MissingFieldsError
 import forms
 
-def unauthorized():
-    return jsonify({'error' : 'True', 'reason' : 'Request is unauthenticated.'})
-login_manager.unauthorized_handler(unauthorized)
-
-class UserMix(UserMixin):
-    def __init__(self, id):
-        self.id = id
-    
-    def is_active(self):
-        return User.is_authorized(self.id)
-
-    def is_authenticated(self):
-        return User.is_authorized(self.id)
-
-@login_manager.user_loader
-def load_user(userid):
-    return UserMix(userid)
-
 @app.route('/')
+@login_required
 def home():
-    return render_template("checkout.html")
+    return render_template("checkout.html", username=current_user.username)
 
 @app.route('/account')
+@login_required
 def accounts():
-    return render_template("account.html")
+    return render_template("account.html", username=current_user.username)
 
 @app.route('/admin')
+@login_required
 def admin():
-    return render_template("admin.html")
+    return render_template("admin.html", username=current_user.username)
 
-@app.route('/login', methods=['POST'])
-@errorhandler
+@app.route('/login', methods=['GET', 'POST'])
 def login():
-    fields = parseData({'username', 'password'})
-    result = User.login(fields['username'], fields['password'])
-    if result is not None:
-        login_user(UserMix(result.token))
-        return result.serialize()
-    raise ApiError("Login failed : provided credentials are wrong.")
+    print current_user.is_authenticated()
+    form = forms.LoginForm()
+    if forms.SellerLoginForm().validate_on_submit():
+        login_user(UserHandler(seller=True))
+        return redirect(request.args.get("next") or url_for("home"))
+
+    elif form.validate_on_submit():
+        user = User.login(form.username.data, form.password.data)
+        if user is not None:
+            login_user(UserHandler(id=user.id))
+        return redirect(request.args.get("next") or url_for("home"))
+
+    else:
+        return render_template("login.html")
 
 @app.route('/logout')
-@errorhandler
+@login_required
 def logout():
     logout_user()
-    return None
+    return redirect('/')
 
 @app.route('/account/list', methods=['GET'])
+@login_required
 @errorhandler
 def listAccounts():
     accounts = Account.list()
     return [acc.serialize() for acc in accounts]
 
 @app.route('/account/<account_id>', methods=['GET'])
+@login_required
 @errorhandler
 def getAccount(account_id):
     account_id = convert(int, account_id)
     return Account.get(account_id).serialize()
 
 @app.route('/account/number/<number>', methods=['GET'])
+@login_required
 @errorhandler
 def getAccountByNumber(number):
     number = convert(int, number)
     return Account.getByNumber(number).serialize()
 
 @app.route('/account/search/<firstname>', methods=['GET'])
+@login_required
 @errorhandler
 def searchAccount(firstname):
     return [acc.serialize() for acc in Account.search(firstname)]
 
 @app.route('/account/create', methods=['POST'])
+@login_required
 @errorhandler
 def createAccount():
     form = forms.AccountCreationForm()
@@ -113,6 +110,7 @@ def createAccount():
         raise MissingFieldsError(form.errors.keys())
 
 @app.route('/account/<id>/edit', methods=['POST'])
+@login_required
 @errorhandler
 def editAccount(id):
     id = convert(int, id)
@@ -125,6 +123,7 @@ def editAccount(id):
         raise MissingFieldsError(form.errors.keys())
 
 @app.route('/account/<id>/delete', methods=['POST'])
+@login_required
 @errorhandler
 def deleteAccount(id):
     id = convert(int, id)
@@ -132,24 +131,28 @@ def deleteAccount(id):
     return Account(id=id).delete().serialize()
 
 @app.route('/account/<id>/calculate', methods=['GET'])
+@login_required
 @errorhandler
 def calculateBalance(id):
     id = convert(int, id)
     return {'balance' : Transaction.calculateBalance(id)}
 
 @app.route('/account/<int:account_id>/transactions', methods=['GET'])
+@login_required
 @errorhandler
 def getTransactions(account_id):
     transactions = Transaction.getByAccount(account_id, 5)
     return [tr.serialize() for tr in transactions]
 
 @app.route('/account/<int:account_id>/transactions/all', methods=['GET'])
+@login_required
 @errorhandler
 def getAllTransactions(account_id):
     transactions = Transaction.getByAccount(account_id, None)
     return [tr.serialize() for tr in transactions]
 
 @app.route('/transaction/add', methods=['POST'])
+@login_required
 @errorhandler
 def addTransaction():
     form = forms.TransactionAddForm()
@@ -160,6 +163,7 @@ def addTransaction():
     
 
 @app.route('/transaction/<id>/revoke', methods=['POST'])
+@login_required
 @errorhandler
 def revokeTransaction(id):
     id = convert(int, id)

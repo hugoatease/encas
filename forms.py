@@ -17,12 +17,15 @@
 #   along with Encas.  If not, see <http://www.gnu.org/licenses/>.
 
 from flask_wtf import Form
-from wtforms import TextField, IntegerField, FloatField
+from wtforms import TextField, IntegerField, FloatField, BooleanField
 from wtforms.validators import InputRequired, Optional, Length
 
 class LoginForm(Form):
     username = TextField('Username', [InputRequired()])
     password= TextField('Password', [InputRequired()])
+
+class SellerLoginForm(Form):
+    seller_access = BooleanField('Seller logging in', [InputRequired()])
 
 class AccountCreationForm(Form):
     firstname = TextField('First Name', [InputRequired()])

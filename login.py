@@ -1,0 +1,69 @@
+#   Encas Sales Management Server
+#   Copyright 2013 - Hugo Caille
+#
+#   This file is part of Encas.
+#
+#   Encas is free software: you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation, either version 3 of the License, or
+#   (at your option) any later version.
+#
+#   Encas is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU General Public License for more details.
+#
+#   You should have received a copy of the GNU General Public License
+#   along with Encas.  If not, see <http://www.gnu.org/licenses/>.
+
+from model import User
+from flask.ext.login import LoginManager, UserMixin
+login_manager = LoginManager()
+
+class UserHandler(UserMixin):
+    def __init__(self, id=None, seller=False):
+        self.id = id
+        self.seller = seller
+        self.__get_user()
+
+    def get_id(self):
+        if self.seller:
+            return "seller"
+        else:
+            return self.id
+
+    def __get_user(self):
+        self.user = None
+        if self.id is not None:
+            self.user = User.get(self.id)
+        return self.user
+
+    @property
+    def username(self):
+        if self.seller:
+            return "Vendeur"
+        elif self.user is not None:
+            return self.user.username
+        else:
+            return None
+
+    def is_admin(self):
+        if self.seller:
+            return False
+
+        if self.user is not None and self.user.admin:
+            return True
+
+        return False
+
+    def export(self):
+        if self.user is not None or self.seller:
+            return self
+        return None
+
+@login_manager.user_loader
+def load_user(id):
+    if id == "seller":
+        return UserHandler(seller=True).export()
+
+    return UserHandler(id=id).export()
