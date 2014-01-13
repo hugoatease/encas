@@ -40,26 +40,27 @@ class Account:
 
     @staticmethod
     def get(id):
-        account = session.query(AccountModel).get(id)
-        if account is None:
+        try:
+            account = session.query(AccountModel).filter_by(deleted=False).filter_by(id=id).one()
+        except NoResultFound:
             raise ApiError("Account not found")
         return account
 
     @staticmethod
     def getByNumber(number):
         try:
-            return session.query(AccountModel).filter_by(number=number).one()
+            return session.query(AccountModel).filter_by(deleted=False).filter_by(number=number).one()
         except NoResultFound:
             raise ApiError("Account not found")
 
     @staticmethod
     def search(firstname):
         filter = firstname + '%'
-        return session.query(AccountModel).filter(AccountModel.firstname.ilike(filter)).all()
+        return session.query(AccountModel).filter_by(deleted=False).filter(AccountModel.firstname.ilike(filter)).all()
 
     @staticmethod
     def list():
-        return session.query(AccountModel).all()
+        return session.query(AccountModel).filter_by(deleted=False).all()
 
     def __init__(self, id=None, number=None):
         if id is not None:
@@ -76,5 +77,11 @@ class Account:
             if key in allowed:
                 setattr(self.account, key, fields[key])
 
+        session.commit()
+        return self.account
+
+    def delete(self):
+        self.account.deleted = True
+        session.add(self.account)
         session.commit()
         return self.account

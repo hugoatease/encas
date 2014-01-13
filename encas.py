@@ -124,6 +124,13 @@ def editAccount(id):
     else:
         raise MissingFieldsError(form.errors.keys())
 
+@app.route('/account/<id>/delete', methods=['POST'])
+@errorhandler
+def deleteAccount(id):
+    id = convert(int, id)
+
+    return Account(id=id).delete().serialize()
+
 @app.route('/account/<id>/calculate', methods=['GET'])
 @errorhandler
 def calculateBalance(id):

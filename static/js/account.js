@@ -70,7 +70,24 @@ var accountModel = {
 		}
 		
 		api.account.edit(refresh, current.account_id, accountModel.edited.firstname(), accountModel.edited.lastname(), accountModel.edited.promo());
-	}
+	},
+
+    delete : function(target) {
+        function refresh(data) {
+            if (reportError(data)) {
+                return;
+            }
+
+            accountModel.visible_account_deletion(false);
+            accountModel.visible_intro(true);
+            transactionModel.clear();
+
+            var message = "L'utilisateur " + data.data.number + " - " + data.data.lastname + " " + data.data.firstname + " a été supprimé"
+            reportSuccess(message);
+        }
+
+        api.account.delete(refresh, current.account_id);
+    }
 };
 
 accountModel.fullname = ko.computed(function() {

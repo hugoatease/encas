@@ -45,6 +45,11 @@ var api = {
 			var data = {'firstname' : firstname, 'lastname' : lastname, 'promo' : promo};
 			jQuery.post(url, data, callback);
 		},
+
+        delete : function(callback, account_id) {
+            var url = '/account/' + account_id + '/delete';
+            jQuery.post(url, callback);
+        },
 		
 		balance : function(callback, account_id) {
 			var url = '/account/' + account_id + '/calculate';

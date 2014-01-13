@@ -11,6 +11,8 @@
         transaction : transactionModel
     };
 
+    viewModels.account.deleteAcc = viewModels.account.delete;
+
 	ko.applyBindings(viewModels);
 
     current.search_callback = function(account_id) {
@@ -44,7 +46,7 @@
 
             <p>
                 <button data-bind="click: showEditor" class="btn btn-default">Editer</button>
-                <!--<button data-bind="click: function() { visible_account_deletion(true) }" class="btn btn-danger">Supprimer</button>-->
+                <button data-bind="click: function() { visible_account_deletion(true) }" class="btn btn-danger">Supprimer</button>
             </p>
 
             <div data-bind="visible: visible_account_edition" class="alert alert-info">
@@ -84,7 +86,7 @@
                 <p>Etes vous sur de vouloir supprimer le compte sélectionné ?</p>
                 <p><span data-bind="text: id"></span> - <span data-bind="text: fullname"></span></p>
                 <p><button data-bind="click: function() { visible_account_deletion(false) }" class="btn btn-primary">Non, je garde le compte</button></p>
-                <p><button class="btn btn-danger">Oui, je supprime le compte</button></p>
+                <p><button data-bind="click: deleteAcc" class="btn btn-danger">Oui, je supprime le compte</button></p>
             </div>
         </div>
     </div>

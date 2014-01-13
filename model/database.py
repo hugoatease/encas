@@ -20,11 +20,12 @@ import config
 from common import Token
 from datetime import datetime
 
-from sqlalchemy import *
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.orm import relationship, backref 
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker, relationship, backref
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.schema import Column
+from sqlalchemy.schema import Column, ForeignKey
+from sqlalchemy.types import Integer, Float, String, DateTime, Boolean
+from sqlalchemy.sql.expression import true, false
 
 engine = create_engine(config.DATABASE_URI, echo=True)
 
@@ -43,13 +44,15 @@ class Account(Base):
     lastname = Column(String, nullable=False)
     promo = Column(String)
     staff = Column(Boolean, nullable=False, default=False)
+
+    deleted = Column(Boolean, nullable=False, default=False, server_default=false())
     
     transactions = relationship("Transaction", backref="accounts")
     
     def serialize(self):
         return {'id' : self.id, 'creation' : self.creation.isoformat(), 'number' : self.number,
                 'firstname' : self.firstname, 'lastname' : self.lastname, 'promo' : self.promo,
-                'staff' : self.staff}
+                'staff' : self.staff, 'deleted' : self.deleted}
     
     def __str__(self):
         return "<Account: #" + str(self.id) + " - " + self.lastname + " " + self.firstname + ">"

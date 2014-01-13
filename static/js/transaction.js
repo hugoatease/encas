@@ -29,5 +29,9 @@ var transactionModel = {
 		}
 
 		api.transaction.listByAccount(refresh.bind(transactionModel), account_id);
-	}
+	},
+
+    clear : function() {
+        transactionModel.transactions.removeAll();
+    }
 };
