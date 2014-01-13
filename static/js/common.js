@@ -6,12 +6,19 @@ var current = {
 function reportError(data) {
 	var alertbar = $("#encasAlert");
 	if (data.error) {
-		alertbar.css("display", "block");
 		alertbar.html("<b>Erreur</b> : " + data.reason);
+        alertbar.show();
 		return true;
 	}
 	alertbar.css("display", "none");
 	return false;
+}
+
+function reportSuccess(message) {
+    var noticebar = $("#encasSuccess");
+    noticebar.find("#success_message").html("<b>Succès</b> : " + message);
+    noticebar.show();
+    return true;
 }
 
 function formatDate(date) {
@@ -19,3 +26,8 @@ function formatDate(date) {
 	var hour = date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
 	return day + " - " + hour;
 }
+
+$("#encasSuccess button").click(function(ev) {
+    ev.preventDefault();
+    $("#encasSuccess").css("display", "none");
+})
