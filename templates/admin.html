@@ -7,34 +7,18 @@
 
 {% block content %}
 	<div class="row">
-		<div class="col-md-6">
-			<h3>Ajout de compte</h3><hr />
-			<form id="addAccountForm">
-				<div class="apiresult"></div>
-				
-				<input class="form-control" type="text" name="firstname" placeholder="Nom" /><br />
-				<input class="form-control" name="lastname" placeholder="Prénom" /><br />
-				<input class="form-control" name="promo" placeholder="Promo" /><br />
-				<button class="btn btn-primary">Ajouter</button>
-			</form>
-		</div>
-		
-		<div class="col-md-6">
-			<h3>Liste des comptes</h3><hr />
-			<table class="table table-hover table-bordered">
-					<thead>
-						<tr>
-							<th> N°</th>
-							<th> Nom</th>
-							<th> Solde</th>
-						</tr>
-					</thead>
+        <div class="col-md-2">
+            <h3>Administration</h3><hr />
+            <ul class="nav nav-pills nav-stacked">
+                <li><a href="#account_add" data-toggle="pill">Ajout de compte</a></li>
+                <li><a href="#account_list" data-toggle="pill">Liste des comptes</a></li>
+            </ul>
+        </div>
 
-					<tbody id="hisTable">
-						
-					</tbody>
-			</table>
-		</div>
+		<div class="col-md-10 tab-content">
+            {% include 'admin/account_add.html' %}
+            {% include 'admin/account_list.html' %}
+        </div>
 	</div>
 
 {% endblock %}
