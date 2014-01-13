@@ -1,5 +1,7 @@
 var transactionModel = {
     transactions: ko.observableArray(),
+    show_revoke: ko.observable(true),
+    show_all : true,
 
     getTransactions: function(account_id) {
 		function refresh(data) {
@@ -28,10 +30,27 @@ var transactionModel = {
 			transactionModel.transactions(data);
 		}
 
-		api.transaction.listByAccount(refresh.bind(transactionModel), account_id);
+		api.transaction.listByAccount(refresh.bind(transactionModel), account_id, transactionModel.show_all);
 	},
 
     clear : function() {
         transactionModel.transactions.removeAll();
+    },
+
+    revoke : function(target) {
+        var transaction_id = target.id;
+
+        function refresh(data) {
+            if (reportError(data)) {
+                return;
+            }
+            var data = data.data;
+
+            reportSuccess("L'opération " + data.operation + " a été révoquée.");
+
+            transactionModel.getTransactions(current.account_id);
+        }
+
+        api.transaction.revoke(refresh, transaction_id);
     }
 };

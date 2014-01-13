@@ -5,7 +5,7 @@
 			<th>Date</th>
 			<th>Montant</th>
 			<th>Solde</th>
-			<th>Révoquée</th>
+			<th data-bind="visible: show_revoke">Révoquée</th>
 		</tr>
 	</thead>
 
@@ -16,9 +16,17 @@
 			<td><span data-bind="text: cash"></span> €</td>
 			<td><span data-bind="text: balance"></span> €</td>
 			
-			<td>
+			<td data-bind="visible: $parent.show_revoke">
 				<span data-bind="if: revoked" class="label label-danger">Oui</span>
-				<span data-bind="ifnot: revoked" class="label label-success">Non</span>
+                <span data-bind="ifnot: revoked">
+				    <span data-bind="ifnot: revokes">
+                        <span class="label label-success">Non</span>
+                        <button data-bind="click: $parent.revoke" class="btn btn-xs btn-danger">Révoquer</button>
+                    </span>
+                    <span data-bind="if: revokes" class="label label-warning">
+                        Révoque la transaction <span data-bind="text: revokes_operation"></span>
+                    </span>
+                </span>
 			</td>
 		</tr>
 	</tbody>

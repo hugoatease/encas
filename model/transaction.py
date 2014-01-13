@@ -80,11 +80,10 @@ class Transaction:
     def revoke(self):
         self.transaction.revoked = True
         session.add(self.transaction)
-        session.commit()
-        return self.transaction
 
-    def unrevoke(self):
-        self.transaction.revoked = False
-        session.add(self.transaction)
+        inverse = self.add(self.transaction.account, -self.transaction.cash)
+        inverse.revokes = self.transaction.id
+        session.add(inverse)
+
         session.commit()
         return self.transaction

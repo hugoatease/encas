@@ -66,12 +66,21 @@ class Transaction(Base):
     operation = Column(Integer, nullable=False)
     cash = Column(Float, nullable=False)
     balance = Column(Float, nullable=False)
+
     revoked = Column(Boolean, nullable=False, default=False)
+    revokes = Column(Integer, ForeignKey('transactions.id'))
     
     def serialize(self):
+        try:
+            revokes = session.query(Transaction).filter_by(id=self.revokes).one()
+            revokes_operation = revokes.operation
+        except:
+            revokes_operation = None
+
+
         return {'id' : self.id, 'account_id' : self.account, 'date' : self.date.isoformat(),
                 'operation' : self.operation, 'cash' : self.cash, 'balance' : self.balance,
-                'revoked' : self.revoked}
+                'revoked' : self.revoked, 'revokes' : self.revokes, 'revokes_operation' : revokes_operation}
     
     def __str__(self):
         return "<Transaction: #" + str(self.id) + " - Cash: " + str(self.cash) + " Balance: " + str(self.balance) + ">"
