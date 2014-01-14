@@ -54,6 +54,8 @@ var transactionAdminModel = {
 };
 
 var userAdminModel = {
+    users : ko.observableArray(),
+
     create_fields : {
         username : ko.observable(),
         password : ko.observable(),
@@ -68,12 +70,24 @@ var userAdminModel = {
             var data = data.data;
 
             var message = "L'administrateur " + data.username + " a bien été créé.";
+            userAdminModel.displayUsers();
             reportSuccess(message);
         }
 
 
         var fields = userAdminModel.create_fields;
         api.user.create_admin(refresh, fields.username(), fields.password(), fields.password_confirm());
+    },
+
+    displayUsers : function(target) {
+        function refresh(data) {
+            if (reportError(data)) {
+                return;
+            }
+            var data = data.data;
+            userAdminModel.users(data);
+        }
+        api.user.list(refresh);
     }
 };
 

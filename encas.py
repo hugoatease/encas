@@ -194,6 +194,12 @@ def revokeTransaction(id):
     id = convert(int, id)
     return Transaction(id).revoke().serialize()
 
+@app.route('/user/list', methods=['GET'])
+@login_required_api
+@errorhandler
+def userList():
+    return [user.serialize() for user in User.list()]
+
 @app.route('/user/admin/create', methods=['POST'])
 @login_required_api
 @errorhandler

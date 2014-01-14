@@ -22,7 +22,7 @@
         <ul data-bind="with: admin" class="nav nav-pills nav-stacked">
             <li><a href="#accounts" data-toggle="pill">Comptes</a></li>
             <li><a href="#transactions" data-bind="click: transaction.display" data-toggle="pill">Transactions</a></li>
-            <li data-bind="visible: $root.is_admin"><a href="#users" data-toggle="pill">Utilisateurs</a></li>
+            <li data-bind="visible: $root.is_admin, click: user.displayUsers"><a href="#users" data-toggle="pill">Utilisateurs</a></li>
         </ul>
     </div>
 
