@@ -75,6 +75,7 @@ class Account:
             for account in accounts:
                 balance = transaction.Transaction.calculateBalance(account.id)
                 account.balance = balance
+                account.to_serialize.append('balance')
 
         return accounts
 

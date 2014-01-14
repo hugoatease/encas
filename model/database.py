@@ -34,6 +34,19 @@ Session = sessionmaker(bind=engine)
 
 session = Session()
 
+def serialization(result, initial=None):
+    serialized = {}
+    for field in result.to_serialize:
+        try:
+            serialized[field] = getattr(result, field)
+        except AttributeError:
+            pass
+
+    for field in initial.keys():
+        serialized[field] = initial[field]
+
+    return serialized
+
 class Account(Base):
     __tablename__ = 'accounts'
     id =  Column(Integer, primary_key=True, nullable=False)
@@ -48,16 +61,14 @@ class Account(Base):
     deleted = Column(Boolean, nullable=False, default=False, server_default=false())
     
     transactions = relationship("Transaction", backref="accounts")
-    
+
+    to_serialize = []
     def serialize(self):
         serialized = {'id' : self.id, 'creation' : self.creation.isoformat(), 'number' : self.number,
                 'firstname' : self.firstname, 'lastname' : self.lastname, 'promo' : self.promo,
                 'staff' : self.staff, 'deleted' : self.deleted}
 
-        if hasattr(self, "balance"):
-            serialized['balance'] = self.balance
-
-        return serialized
+        return serialization(self, serialized)
     
     def __str__(self):
         return "<Account: #" + str(self.id) + " - " + self.lastname + " " + self.firstname + ">"
@@ -74,7 +85,8 @@ class Transaction(Base):
 
     revoked = Column(Boolean, nullable=False, default=False)
     revokes = Column(Integer, ForeignKey('transactions.id'))
-    
+
+    to_serialize = []
     def serialize(self):
         try:
             revokes = session.query(Transaction).filter_by(id=self.revokes).one()
@@ -82,10 +94,11 @@ class Transaction(Base):
         except:
             revokes_operation = None
 
-
-        return {'id' : self.id, 'account_id' : self.account, 'date' : self.date.isoformat(),
+        serialized = {'id' : self.id, 'account_id' : self.account, 'date' : self.date.isoformat(),
                 'operation' : self.operation, 'cash' : self.cash, 'balance' : self.balance,
                 'revoked' : self.revoked, 'revokes' : self.revokes, 'revokes_operation' : revokes_operation}
+
+        return serialization(self, serialized)
     
     def __str__(self):
         return "<Transaction: #" + str(self.id) + " - Cash: " + str(self.cash) + " Balance: " + str(self.balance) + ">"
