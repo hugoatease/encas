@@ -1,0 +1,26 @@
+<div data-bind="with: admin.user" class="tab-pane" id="users">
+    <div class="row">
+        <div class="col-md-4">
+            <h3>Ajouter un administrateur</h3><hr />
+            <form data-bind="submit: create">
+                <div data-bind="with: create_fields">
+                    <input data-bind="value: username" type="text" class="form-control" placeholder="Nom d'utilisateur" /><br />
+                    <input data-bind="value: password" type="password" class="form-control" placeholder="Mot de passe" /><br />
+                    <input data-bind="value: password_confirm" type="password" class="form-control" placeholder="Confirmation du mot de passe" /><br />
+                </div>
+                <button class="btn btn-primary">Créer</button>
+            </form>
+
+            <br />
+            <div class="alert alert-warning">
+                <p><b>Droits administrateurs</b></p>
+                <p>Les utilisateurs ajoutés auront les droits administrateurs et pourront supprimer
+                des comptes et des utilisateurs.</p>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <h3>Liste des utilisateurs</h3><hr />
+        </div>
+    </div>
+</div>

@@ -18,7 +18,7 @@
 
 from flask_wtf import Form
 from wtforms import TextField, IntegerField, FloatField, BooleanField
-from wtforms.validators import InputRequired, Optional, Length
+from wtforms.validators import InputRequired, Optional, Length, EqualTo
 
 class LoginForm(Form):
     username = TextField('Username', [InputRequired()])
@@ -42,3 +42,8 @@ class AccountEditionForm(Form):
 class TransactionAddForm(Form):
     account_id = IntegerField('Account ID', [InputRequired()])
     cash = FloatField('Cash', [InputRequired()])
+
+class UserCreationForm(Form):
+    username = TextField('Username', [InputRequired()])
+    password = TextField('Password', [InputRequired(), Length(min=6), EqualTo('password_confirm')])
+    password_confirm = TextField('Password confirmation', [InputRequired()])

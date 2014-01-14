@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-md-4">
             <h3>Ajout de compte</h3><hr />
-            <form data-bind="submit: add" id="addAccountForm">
+            <form data-bind="submit: add">
                 <div data-bind="with: add_fields">
                     <div class="input-group">
                         <span class="input-group-addon">#</span>
@@ -18,9 +18,14 @@
                     <button class="btn btn-primary">Ajouter</button>
                 </div>
             </form>
-            <p class="text-muted">Un numéro de compte libre sera automatiquement déterminé si vous laissez
-            le champ vide.</p>
-            <p class="text-muted">De même, un solde initial nul sera également affecté si le champ est vide.</p>
+
+            <br />
+            <div class="alert alert-info">
+                <p><b>Champs optionnels</b></p>
+                <p>Un numéro de compte libre sera automatiquement déterminé si vous laissez
+                le champ vide.</p>
+                <p>De même, un solde initial nul sera affecté si le champ est vide.</p>
+            </div>
         </div>
 
         <div class="col-md-8">

@@ -53,9 +53,34 @@ var transactionAdminModel = {
     }
 };
 
+var userAdminModel = {
+    create_fields : {
+        username : ko.observable(),
+        password : ko.observable(),
+        password_confirm : ko.observable()
+    },
+
+    create : function(target) {
+        function refresh(data) {
+            if (reportError(data)) {
+                return;
+            }
+            var data = data.data;
+
+            var message = "L'administrateur " + data.username + " a bien été créé.";
+            reportSuccess(message);
+        }
+
+
+        var fields = userAdminModel.create_fields;
+        api.user.create_admin(refresh, fields.username(), fields.password(), fields.password_confirm());
+    }
+};
+
 var adminModel = {
     account : accountAdminModel,
-    transaction : transactionAdminModel
+    transaction : transactionAdminModel,
+    user : userAdminModel
 };
 
 accountAdminModel.display_active();

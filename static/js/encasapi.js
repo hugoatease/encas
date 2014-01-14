@@ -12,7 +12,13 @@ var api = {
 		
 		logout : function(callback) {
 			jQuery.get('/logout', callback);
-		}
+		},
+
+        create_admin : function(callback, username, password, password_confirm) {
+            var url = '/user/admin/create';
+            var data = {'username' : username, 'password' : password, 'password_confirm' : password_confirm};
+            jQuery.post(url, data, callback);
+        }
 	},
 	
 	account : {

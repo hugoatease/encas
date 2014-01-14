@@ -60,6 +60,9 @@ def login():
         user = User.login(form.username.data, form.password.data)
         if user is not None:
             login_user(UserHandler(id=user.id))
+        else:
+            return render_template("login.html", credentials=True)
+
         return redirect(request.args.get("next") or url_for("home"))
 
     else:
@@ -190,6 +193,19 @@ def addTransaction():
 def revokeTransaction(id):
     id = convert(int, id)
     return Transaction(id).revoke().serialize()
+
+@app.route('/user/admin/create', methods=['POST'])
+@login_required_api
+@errorhandler
+@admin_required
+def adminCreation():
+    form = forms.UserCreationForm()
+    if form.validate_on_submit():
+        user = User.create(form.username.data, form.password.data)
+        User(user.id).makeAdmin()
+        return user.serialize()
+    else:
+        raise MissingFieldsError(form.errors.keys())
 
 if __name__ == '__main__':
     app.run()

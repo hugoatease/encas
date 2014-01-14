@@ -9,7 +9,8 @@
 <script type="text/javascript">
     var viewModels = {
         checkout : checkoutModel,
-        transaction : transactionModel
+        transaction : transactionModel,
+        is_admin : ko.observable()
     };
 
     viewModels.checkout.make_checkout = function() {

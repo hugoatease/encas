@@ -18,13 +18,20 @@
 
 from database import session
 from database import User as UserModel
+from sqlalchemy.exc import IntegrityError
+from errors import ApiError
 
 class User:
     @staticmethod
     def create(username, password):
         user = UserModel(username=username, password=password)
         session.add(user)
-        session.commit()
+        try:
+            session.commit()
+        except IntegrityError:
+            session.rollback()
+            raise ApiError("Error during account creation")
+
         return user
 
     @staticmethod
