@@ -27,7 +27,7 @@ from sqlalchemy.schema import Column, ForeignKey
 from sqlalchemy.types import Integer, Float, String, DateTime, Boolean
 from sqlalchemy.sql.expression import true, false
 
-engine = create_engine(config.DATABASE_URI, echo=True)
+engine = create_engine(config.DATABASE_URI)
 
 Base = declarative_base(bind=engine)
 Session = sessionmaker(bind=engine)

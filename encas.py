@@ -115,7 +115,12 @@ def searchAccount(firstname):
 def createAccount():
     form = forms.AccountCreationForm()
     if form.validate_on_submit():
-        return Account.create(form.firstname.data, form.lastname.data, form.promo.data).serialize()
+        account = Account.create(form.firstname.data, form.lastname.data, form.promo.data, form.number.data)
+
+        if form.balance.data is not None:
+            Transaction.add(account.id, form.balance.data)
+
+        return account.serialize()
     else:
         raise MissingFieldsError(form.errors.keys())
 

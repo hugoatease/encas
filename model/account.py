@@ -32,8 +32,22 @@ class Account:
             return result.number + 1
 
     @classmethod
-    def create(self, firstname, lastname, promo):
-        account = AccountModel(number=self.available(), firstname=firstname, lastname=lastname, promo=promo)
+    def create(self, firstname, lastname, promo, number=None):
+        error = False
+        if number is not None:
+            try:
+                self.getByNumber(number)
+                # If no exception raised, account number is already taken.
+                error = True
+            except ApiError: # Account doesn't exist, creation can proceed
+                pass
+        else:
+            number = self.available()
+
+        if error:
+            raise ApiError("Account number " + str(number) + " is already taken, try another one.")
+
+        account = AccountModel(number=number, firstname=firstname, lastname=lastname, promo=promo)
         session.add(account)
         session.commit()
 

@@ -39,8 +39,16 @@ var api = {
 			jQuery.get(url, callback);
 		},
 		
-		create : function(callback, firstname, lastname, promo) {
+		create : function(callback, firstname, lastname, promo, number, balance) {
 			var data = {'firstname' : firstname, 'lastname' : lastname, 'promo' : promo};
+            if (number !== undefined) {
+                data['number'] = number;
+            }
+
+            if (balance !== undefined) {
+                data['balance'] = balance;
+            }
+
 			jQuery.post('/account/create', data, callback);
 		},
 		

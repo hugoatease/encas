@@ -31,6 +31,8 @@ class AccountCreationForm(Form):
     firstname = TextField('First Name', [InputRequired()])
     lastname = TextField('Last Name', [InputRequired()])
     promo = TextField('Promotion', [InputRequired()])
+    number = IntegerField('Account number', [Optional()])
+    balance = FloatField('Initial balance', [Optional()])
 
 class AccountEditionForm(Form):
     firstname = TextField('First Name', [InputRequired()])

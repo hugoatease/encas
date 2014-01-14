@@ -3,7 +3,9 @@ var accountAdminModel = {
     add_fields : {
         firstname : ko.observable(),
         lastname : ko.observable(),
-        promo : ko.observable()
+        promo : ko.observable(),
+        number : ko.observable(),
+        balance : ko.observable()
     },
 
     displayAccounts : function(filter) {
@@ -41,7 +43,7 @@ var accountAdminModel = {
             accountAdminModel.display_active();
         }
 
-        api.account.create(refresh, fields.firstname(), fields.lastname(), fields.promo());
+        api.account.create(refresh, fields.firstname(), fields.lastname(), fields.promo(), fields.number(), fields.balance());
     }
 };
 
