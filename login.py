@@ -93,5 +93,5 @@ def admin_required(func):
     def decorated_func(*args, **kwargs):
         if not current_user.is_admin():
             raise ApiError("Forbidden action : you must have administrator rights")
-        func(*args, **kwargs)
+        return func(*args, **kwargs)
     return decorated_func

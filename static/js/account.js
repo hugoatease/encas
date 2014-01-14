@@ -77,12 +77,13 @@ var accountModel = {
             if (reportError(data)) {
                 return;
             }
+            var data = data.data;
 
             accountModel.visible_account_deletion(false);
             accountModel.visible_intro(true);
             transactionModel.clear();
 
-            var message = "L'utilisateur " + data.data.number + " - " + data.data.lastname + " " + data.data.firstname + " a été supprimé"
+            var message = "L'utilisateur " + data.number + " - " + data.lastname + " " + data.firstname + " a été supprimé"
             reportSuccess(message);
         }
 
