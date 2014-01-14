@@ -1,9 +1,9 @@
 var accountAdminModel = {
     accounts : ko.observableArray(),
     add_fields : {
-        firstname : ko.observable(),
-        lastname : ko.observable(),
-        promo : ko.observable()
+        firstname : ko.observable(""),
+        lastname : ko.observable(""),
+        promo : ko.observable("")
     },
 
     displayAccounts : function(filter) {
@@ -41,8 +41,15 @@ var accountAdminModel = {
     }
 };
 
+var transactionAdminModel = {
+    display : function(filter) {
+        transactionModel.getTransactions(undefined, true);
+    }
+};
+
 var adminModel = {
-    account : accountAdminModel
+    account : accountAdminModel,
+    transaction : transactionAdminModel
 };
 
 accountAdminModel.display_active();

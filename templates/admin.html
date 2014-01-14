@@ -2,29 +2,32 @@
 {% block title %} - Administration{% endblock %}
 {% block javascript %}
     <script type="text/javascript" src="/static/js/admin.js"></script>
+    <script type="text/javascript" src="/static/js/transaction.js"></script>
     <script type="text/javascript">
         var viewModels = {
-            admin : adminModel
+            admin : adminModel,
+            transaction : transactionModel
         };
+
+        transactionModel.show_account(true);
 
         ko.applyBindings(viewModels);
     </script>
 {% endblock %}
 
 {% block content %}
-	<div data-bind="with: admin" class="row">
-        <div class="col-md-2">
-            <h3>Administration</h3><hr />
-            <ul class="nav nav-pills nav-stacked">
-                <li><a href="#accounts" data-toggle="pill">Comptes</a></li>
-                <li><a href="#transactions" data-toggle="pill">Transactions</a></li>
-                <li><a href="#users" data-toggle="pill">Utilisateurs</a></li>
-            </ul>
-        </div>
+    <div class="col-md-2">
+        <h3>Administration</h3><hr />
+        <ul data-bind="with: admin" class="nav nav-pills nav-stacked">
+            <li><a href="#accounts" data-toggle="pill">Comptes</a></li>
+            <li><a href="#transactions" data-bind="click: transaction.display" data-toggle="pill">Transactions</a></li>
+            <li><a href="#users" data-toggle="pill">Utilisateurs</a></li>
+        </ul>
+    </div>
 
-		<div class="col-md-10 tab-content">
-            {% include 'admin/account.html' %}
-        </div>
-	</div>
+    <div class="col-md-10 tab-content">
+        {% include 'admin/account.html' %}
+        {% include 'admin/transaction.html' %}
+    </div>
 
 {% endblock %}

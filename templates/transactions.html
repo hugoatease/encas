@@ -1,7 +1,8 @@
 <table data-bind="with: transaction" class="table table-hover table-bordered">
 	<thead>
 		<tr>
-			<th>Operation #</th>
+            <th data-bind="visible: show_account">Compte</th>
+			<th>Operation</th>
 			<th>Date</th>
 			<th>Montant</th>
 			<th>Solde</th>
@@ -11,6 +12,10 @@
 
 	<tbody data-bind="foreach: transactions">
 		<tr data-bind="css: state">
+            <td data-bind="visible: $parent.show_account, if: $parent.show_account">
+                <span data-bind="text: account_number"></span> -
+                <span data-bind="text: account_lastname"></span> <span data-bind="text: account_firstname"></span>
+            </td>
 			<td data-bind="text: operation"></td>
 			<td data-bind="text: date"></td>
 			<td><span data-bind="text: cash"></span> €</td>

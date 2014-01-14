@@ -160,6 +160,12 @@ def getAllTransactions(account_id):
     transactions = Transaction.getByAccount(account_id, None)
     return [tr.serialize() for tr in transactions]
 
+@app.route('/transaction/list', methods=['GET'])
+@login_required_api
+@errorhandler
+def listTransaction():
+    return [tr.serialize() for tr in Transaction.list()]
+
 @app.route('/transaction/add', methods=['POST'])
 @login_required_api
 @errorhandler

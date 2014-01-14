@@ -1,9 +1,11 @@
 var transactionModel = {
     transactions: ko.observableArray(),
     show_revoke: ko.observable(true),
+    show_account : ko.observable(false),
+
     show_all : true,
 
-    getTransactions: function(account_id) {
+    getTransactions: function(account_id, all) {
 		function refresh(data) {
 			if (reportError(data)) {
 				return;
@@ -30,6 +32,9 @@ var transactionModel = {
 			transactionModel.transactions(data);
 		}
 
+        if (all === undefined || all === true) {
+            api.transaction.list(refresh.bind(transactionModel));
+        }
 		api.transaction.listByAccount(refresh.bind(transactionModel), account_id, transactionModel.show_all);
 	},
 
