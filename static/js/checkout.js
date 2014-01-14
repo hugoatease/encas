@@ -1,6 +1,7 @@
 var checkoutModel = {
 	balance: ko.observable(),
 	checkout_price: ko.observable(),
+    checkout_focus : ko.observable(true),
 	
 	getBalance: function(account_id) {
 		function refreshBalance(data) {

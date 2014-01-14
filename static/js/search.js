@@ -29,13 +29,17 @@ function searchAccountByName() {
 	var results = $("#search_name_box table tbody");
 	
 	function refresh(data) {
+        function done(number) {
+            showAccount(number);
+            boxes.name.hide();
+			results.children().remove();
+        }
+
 		function retrieve(ev) {
 			ev.preventDefault();
 			var target = $(ev.target);
 			var number = target.closest("tr").find(".account_number:first()").html();
-			showAccount(number);
-			boxes.name.hide();
-			results.children().remove();
+			done(number);
 		}
 	
 		if (reportError(data)) {
@@ -45,6 +49,11 @@ function searchAccountByName() {
 		results.children().remove();
 		
 		var data = data.data;
+
+        if (data.length === 1) {
+            done(data[0].number);
+        }
+
 		for (var i=0; i < data.length; i++) {
 			var account = data[i];
 			var line = $("<tr>").appendTo(results);

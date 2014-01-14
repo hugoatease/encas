@@ -23,6 +23,7 @@
     current.search_callback = function(account_id) {
         transactionModel.getTransactions(account_id);
         checkoutModel.getBalance(account_id);
+        checkoutModel.checkout_focus(true);
     };
 </script>
 {% endblock %}
@@ -58,7 +59,7 @@
 			<form data-bind="submit: make_checkout" id="checkout" class="form-inline" role="form">
 				<div class="form-group">
 					<div class="input-group">
-						<input data-bind="value: checkout_price" class="form-control" type="text" placeholder="Montant">
+						<input data-bind="hasFocus: checkout_focus, value: checkout_price" class="form-control" type="text" placeholder="Montant">
 						<span class="input-group-addon">€</span>
 					</div>
 				</div>
