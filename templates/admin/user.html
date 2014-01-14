@@ -38,7 +38,7 @@
                             <span data-bind="if: admin" class="label label-success">Oui</span>
                             <span data-bind="ifnot: admin" class="label label-danger">None</span>
                         </td>
-                        <td><button class="btn btn-danger btn-xs">Supprimer</button></td>
+                        <td><button data-bind="click: $parent.remove" class="btn btn-danger btn-xs">Supprimer</button></td>
                     </tr>
                 </tbody>
             </table>

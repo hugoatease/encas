@@ -213,5 +213,13 @@ def adminCreation():
     else:
         raise MissingFieldsError(form.errors.keys())
 
+@app.route('/user/<id>/remove', methods=['POST'])
+@login_required_api
+@errorhandler
+@admin_required
+def userRemove(id):
+    id = convert(int, id)
+    return User(id).remove().serialize()
+
 if __name__ == '__main__':
     app.run()

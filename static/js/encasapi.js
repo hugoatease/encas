@@ -22,6 +22,11 @@ var api = {
             var url = '/user/admin/create';
             var data = {'username' : username, 'password' : password, 'password_confirm' : password_confirm};
             jQuery.post(url, data, callback);
+        },
+
+        remove : function(callback, user_id) {
+            var url = '/user/' + user_id + '/remove';
+            jQuery.post(url, callback);
         }
 	},
 	

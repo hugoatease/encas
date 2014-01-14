@@ -37,7 +37,7 @@ class User:
     @staticmethod
     def login(username, password):
         try:
-            user = session.query(UserModel).filter_by(username=username, password=password).one()
+            user = session.query(UserModel).filter_by(username=username, password=password, suspended=False).one()
         except:
             return None
 
@@ -57,11 +57,11 @@ class User:
 
     @staticmethod
     def list():
-        return session.query(UserModel).all()
+        return session.query(UserModel).filter_by(suspended=False).all()
 
     @staticmethod
     def getByToken(token):
-        q = session.query(User).filter_by(token=token)
+        q = session.query(User).filter_by(token=token, suspended=False)
         if q.count() == 0:
             return None
         return q.one()
@@ -81,10 +81,9 @@ class User:
         self.user = self.get(id)
 
     def remove(self):
-        self.user.suspended = True
-        session.add(self.user)
+        session.delete(self.user)
         session.commit()
-        return True
+        return self.user
 
     def makeAdmin(self):
         self.user.admin = True

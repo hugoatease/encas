@@ -70,8 +70,8 @@ var userAdminModel = {
             var data = data.data;
 
             var message = "L'administrateur " + data.username + " a bien été créé.";
-            userAdminModel.displayUsers();
             reportSuccess(message);
+            userAdminModel.displayUsers();
         }
 
 
@@ -88,6 +88,21 @@ var userAdminModel = {
             userAdminModel.users(data);
         }
         api.user.list(refresh);
+    },
+
+    remove : function(target) {
+        function refresh(data) {
+            if (reportError(data)) {
+                return;
+            }
+            var data = data.data;
+
+            var message = "Le compte " + data.username + " a bien été supprimé";
+            reportSuccess(message);
+            userAdminModel.displayUsers();
+        }
+
+        api.user.remove(refresh, target.id);
     }
 };
 
