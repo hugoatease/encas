@@ -26,11 +26,11 @@
                 <span data-bind="ifnot: revoked">
 				    <span data-bind="ifnot: revokes">
                         <span class="label label-success">Non</span>
-                        <button data-bind="click: $parent.revoke" class="btn btn-xs btn-danger">Révoquer</button>
                     </span>
                     <span data-bind="if: revokes" class="label label-warning">
                         Révoque la transaction <span data-bind="text: revokes_operation"></span>
                     </span>
+                    &nbsp;<button data-bind="click: $parent.revoke" class="btn btn-xs btn-danger">Révoquer</button>
                 </span>
 			</td>
 		</tr>
