@@ -74,11 +74,17 @@ def logout():
     logout_user()
     return redirect('/')
 
-@app.route('/account/list', methods=['GET'])
+@app.route('/account/list/<filter>', methods=['GET'])
 @login_required_api
 @errorhandler
-def listAccounts():
-    accounts = Account.list()
+def listAccounts(filter):
+    if filter == "active":
+        accounts = Account.list("active")
+    elif filter == "deleted":
+        accounts = Account.list("deleted")
+    else:
+        raise ApiError("Wrong filter, must be one of these: active, deleted")
+
     return [acc.serialize() for acc in accounts]
 
 @app.route('/account/<account_id>', methods=['GET'])

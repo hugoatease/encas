@@ -1,42 +1,48 @@
-function addAccount() {
-	var result = $("#addAccountForm .apiresult:first");
-	var firstname = $("#addAccountForm [name='firstname']").val();
-	var lastname = $("#addAccountForm [name='lastname']").val();
-	var promo = $("#addAccountForm [name='promo']").val();
-	
-	function success(data) {
-		if (data.error) {
-			result.html("Erreur: " + data.reason);
-			return;
-		}
-		
-		result.html("Compte " + data.data.number + " " + data.data.firstname + " " + data.data.lastname + " créé.");
-	}
-	
-	api.account.create(success, firstname, lastname, promo);
-}
+var accountAdminModel = {
+    accounts : ko.observableArray(),
+    add_fields : {
+        firstname : ko.observable(),
+        lastname : ko.observable(),
+        promo : ko.observable()
+    },
 
-function displayAccountList () {
-	function success(data) {
-		if (data.error) {
-			result.html("Erreur: " + data.reason);
-			return;
-		}
+    displayAccounts : function(filter) {
+        function refresh(data) {
+            if (reportError(data)) {
+                return;
+            }
+            var data = data.data;
+            accountAdminModel.accounts(data);
+        }
+        api.account.list(refresh, filter);
+    },
 
-		var table = $('#hisTable');
-		for (var i = 0; i <= data.data.length -1 ; i++) {
-			var line = $("<tr>").appendTo(table);
-			$("<td>").html(data.data[i].number).appendTo(line);
-			$("<td>").html(data.data[i].firstname + " " + data.data[i].lastname).appendTo(line);
-		}
-	}
+    display_active : function(target) {
+        accountAdminModel.displayAccounts("active");
+    },
 
-	api.account.list(success);
-}
+    display_deleted : function(target) {
+        accountAdminModel.displayAccounts("deleted");
+    },
 
-$("#addAccountForm").submit(function(ev) {
-	ev.preventDefault();
-	addAccount();
-});
+    add : function(target) {
+        var fields = accountAdminModel.add_fields;
 
-displayAccountList();
+        function refresh(data) {
+            if (reportError(data)) {
+                return;
+            }
+
+            reportSuccess("Compte " + data.data.number + " - " + data.data.lastname + " " + data.data.firstname + " créé.");
+            accountAdminModel.display_active();
+        }
+
+        api.account.create(refresh, fields.firstname, fields.lastname, fields.promo);
+    }
+};
+
+var adminModel = {
+    account : accountAdminModel
+};
+
+accountAdminModel.display_active();

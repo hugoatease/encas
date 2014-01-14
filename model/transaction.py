@@ -19,7 +19,7 @@
 from database import session
 from database import Transaction as TransactionModel
 
-from account import Account
+import account
 
 class Transaction:
     @staticmethod
@@ -36,7 +36,7 @@ class Transaction:
 
     @staticmethod
     def getByAccount(account_id, max=None, exclude_revoked=False):
-        Account.get(account_id) # Raises exception if account doesn't exist.
+        account.Account.get(account_id) # Raises exception if account doesn't exist.
         query = session.query(TransactionModel).filter_by(account=account_id)
         if exclude_revoked:
             query = query.filter_by(revoked=False)

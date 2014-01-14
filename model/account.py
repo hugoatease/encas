@@ -18,6 +18,7 @@
 
 from database import session
 from database import Account as AccountModel
+import transaction
 from sqlalchemy.orm.exc import NoResultFound
 from errors import ApiError
 
@@ -41,7 +42,7 @@ class Account:
     @staticmethod
     def get(id):
         try:
-            account = session.query(AccountModel).filter_by(deleted=False).filter_by(id=id).one()
+            account = session.query(AccountModel).filter_by(id=id).one()
         except NoResultFound:
             raise ApiError("Account not found")
         return account
@@ -59,8 +60,23 @@ class Account:
         return session.query(AccountModel).filter_by(deleted=False).filter(AccountModel.firstname.ilike(filter)).all()
 
     @staticmethod
-    def list():
-        return session.query(AccountModel).filter_by(deleted=False).all()
+    def list(filter="active", balance=True):
+        query = session.query(AccountModel).order_by("number desc")
+
+        if filter == "active":
+            query = query.filter_by(deleted=False)
+        elif filter == "deleted":
+            query = query.filter_by(deleted=True)
+        else:
+            raise ApiError("Wrong filter, must be one of these: active, deleted")
+
+        accounts = query.all()
+        if balance:
+            for account in accounts:
+                balance = transaction.Transaction.calculateBalance(account.id)
+                account.balance = balance
+
+        return accounts
 
     def __init__(self, id=None, number=None):
         if id is not None:

@@ -50,9 +50,14 @@ class Account(Base):
     transactions = relationship("Transaction", backref="accounts")
     
     def serialize(self):
-        return {'id' : self.id, 'creation' : self.creation.isoformat(), 'number' : self.number,
+        serialized = {'id' : self.id, 'creation' : self.creation.isoformat(), 'number' : self.number,
                 'firstname' : self.firstname, 'lastname' : self.lastname, 'promo' : self.promo,
                 'staff' : self.staff, 'deleted' : self.deleted}
+
+        if hasattr(self, "balance"):
+            serialized['balance'] = self.balance
+
+        return serialized
     
     def __str__(self):
         return "<Account: #" + str(self.id) + " - " + self.lastname + " " + self.firstname + ">"
