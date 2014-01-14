@@ -100,7 +100,7 @@ var boxes = {
 			this.visible = false;
 			$("#search_name_box").css("display", "none");
 			$("#searchByNameForm #nameInput").val("");
-		},
+		}
 	},
 	
 	click : function(btnName) {
@@ -150,3 +150,11 @@ $("#searchByNameForm #nameInput").keyup(function(ev) {
 		searchAccountByName();
 	}
 });
+
+Mousetrap.bind('o', function() {
+    boxes.click("number");
+})
+
+Mousetrap.bind('p', function() {
+    boxes.click("name");
+})
