@@ -59,6 +59,10 @@ class UserHandler(UserMixin):
 
         return False
 
+    @property
+    def admin(self):
+        return self.is_admin()
+
     def export(self):
         if self.user is not None or self.seller:
             return self

@@ -9,7 +9,8 @@
 <script type="text/javascript">
     var viewModels = {
         account : accountModel,
-        transaction : transactionModel
+        transaction : transactionModel,
+        is_admin : ko.observable()
     };
 
     viewModels.account.deleteAcc = viewModels.account.delete;
@@ -47,7 +48,7 @@
 
             <p>
                 <button data-bind="click: showEditor" class="btn btn-default">Editer</button>
-                <button data-bind="click: function() { visible_account_deletion(true) }" class="btn btn-danger">Supprimer</button>
+                <button data-bind="visible: $root.is_admin, click: function() { visible_account_deletion(true) }" class="btn btn-danger">Supprimer</button>
             </p>
 
             <div data-bind="visible: visible_account_edition" class="alert alert-info">

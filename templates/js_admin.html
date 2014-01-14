@@ -1,0 +1,9 @@
+<script type="text/javascript">
+    if (viewModels !== undefined) {
+        {% if current_user.admin %}
+        viewModels.is_admin(true);
+        {% else %}
+        viewModels.is_admin(false);
+        {% endif %}
+    }
+</script>

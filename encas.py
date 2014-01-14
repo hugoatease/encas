@@ -37,17 +37,17 @@ import forms
 @app.route('/')
 @login_required
 def home():
-    return render_template("checkout.html", username=current_user.username)
+    return render_template("checkout.html")
 
 @app.route('/account')
 @login_required
 def accounts():
-    return render_template("account.html", username=current_user.username)
+    return render_template("account.html")
 
 @app.route('/admin')
 @login_required
 def admin():
-    return render_template("admin.html", username=current_user.username)
+    return render_template("admin.html")
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
