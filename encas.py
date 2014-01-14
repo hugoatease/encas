@@ -82,8 +82,10 @@ def listAccounts(filter):
         accounts = Account.list("active")
     elif filter == "deleted":
         accounts = Account.list("deleted")
+    elif filter == "debts":
+        accounts = Account.list("debts")
     else:
-        raise ApiError("Wrong filter, must be one of these: active, deleted")
+        raise ApiError("Wrong filter, must be one of these: active, deleted, debts")
 
     return [acc.serialize() for acc in accounts]
 

@@ -63,19 +63,27 @@ class Account:
     def list(filter="active", balance=True):
         query = session.query(AccountModel).order_by("number desc")
 
+        if filter not in ['active', 'deleted', 'debts']:
+            raise ApiError("Wrong filter, must be one of these: active, deleted, debts")
+
         if filter == "active":
             query = query.filter_by(deleted=False)
         elif filter == "deleted":
             query = query.filter_by(deleted=True)
-        else:
-            raise ApiError("Wrong filter, must be one of these: active, deleted")
 
         accounts = query.all()
-        if balance:
+        if balance or filter == "debts":
             for account in accounts:
                 balance = transaction.Transaction.calculateBalance(account.id)
                 account.balance = balance
                 account.to_serialize.append('balance')
+
+        if filter == "debts":
+            all = list(accounts)
+            accounts = list()
+            for account in all:
+                if account.balance < 0:
+                    accounts.append(account)
 
         return accounts
 

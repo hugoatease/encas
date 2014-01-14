@@ -15,8 +15,11 @@
         <div class="col-md-8">
             <h3>Liste des comptes</h3><hr />
             <p>
-                <button data-bind="click: display_active" class="btn btn-link">Tous</button>
-                <button data-bind="click: display_deleted" class="btn btn-link">Supprimés</button>
+                <ul class="nav nav-tabs">
+                    <li data-bind="click: display_active"><a href="#">Tous</a></li>
+                    <li data-bind="click: display_debts"><a href="#">Solde négatif</a></li>
+                    <li data-bind="click: display_deleted"><a href="#">Supprimés</a></li>
+                </ul>
             </p>
             <table class="table table-hover table-bordered">
                     <thead>

@@ -25,6 +25,10 @@ var accountAdminModel = {
         accountAdminModel.displayAccounts("deleted");
     },
 
+    display_debts : function(target) {
+        accountAdminModel.displayAccounts("debts");
+    },
+
     add : function(target) {
         var fields = accountAdminModel.add_fields;
 
