@@ -25,11 +25,22 @@ from errors import ApiError
 class Account:
     @staticmethod
     def available():
-        if session.query(AccountModel).count() == 0:
+        if session.query(AccountModel).filter_by(deleted=False).count() == 0:
             return 1
         else:
-            result = session.query(AccountModel).order_by("number desc").first()
-            return result.number + 1
+            accounts = session.query(AccountModel).filter_by(deleted=False).order_by("number asc").all()
+
+            previous = 0
+            for account in accounts:
+                if account.number > previous + 1:
+                    number = previous + 1
+                    break
+                else:
+                    number = account.number + 1
+
+                previous = account.number
+
+            return number
 
     @classmethod
     def create(self, firstname, lastname, promo, number=None):
@@ -120,6 +131,7 @@ class Account:
         return self.account
 
     def delete(self):
+        self.account.number = None
         self.account.deleted = True
         session.add(self.account)
         session.commit()
