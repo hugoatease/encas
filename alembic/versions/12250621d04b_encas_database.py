@@ -1,13 +1,13 @@
-"""Initializing database
+"""Encas database
 
-Revision ID: 4300252b293e
+Revision ID: 12250621d04b
 Revises: None
-Create Date: 2014-01-12 11:21:50.352979
+Create Date: 2014-01-15 16:22:50.186798
 
 """
 
 # revision identifiers, used by Alembic.
-revision = '4300252b293e'
+revision = '12250621d04b'
 down_revision = None
 
 from alembic import op
@@ -19,11 +19,12 @@ def upgrade():
     op.create_table('accounts',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('creation', sa.DateTime(), nullable=False),
-    sa.Column('number', sa.Integer(), nullable=False),
+    sa.Column('number', sa.Integer(), nullable=True),
     sa.Column('firstname', sa.String(), nullable=False),
     sa.Column('lastname', sa.String(), nullable=False),
     sa.Column('promo', sa.String(), nullable=True),
     sa.Column('staff', sa.Boolean(), nullable=False),
+    sa.Column('deleted', sa.Boolean(), server_default='0', nullable=False),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('number')
     )
@@ -46,7 +47,9 @@ def upgrade():
     sa.Column('cash', sa.Float(), nullable=False),
     sa.Column('balance', sa.Float(), nullable=False),
     sa.Column('revoked', sa.Boolean(), nullable=False),
+    sa.Column('revokes', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['account'], ['accounts.id'], ),
+    sa.ForeignKeyConstraint(['revokes'], ['transactions.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     ### end Alembic commands ###

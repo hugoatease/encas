@@ -52,7 +52,7 @@ class Account(Base):
     id =  Column(Integer, primary_key=True, nullable=False)
     creation = Column(DateTime, nullable=False, default=datetime.utcnow)
     
-    number = Column(Integer, unique=True, nullable=False)
+    number = Column(Integer, unique=True)
     firstname = Column(String, nullable=False)
     lastname = Column(String, nullable=False)
     promo = Column(String)
