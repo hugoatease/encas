@@ -22,8 +22,15 @@ function reportSuccess(message) {
 }
 
 function formatDate(date) {
-	var day = date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
-	var hour = date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+    function zeros(number) {
+        if (number < 10) {
+            return '0' + number;
+        }
+        return number;
+    }
+
+	var day = date.getDate() + "/" + zeros((date.getMonth() + 1)) + "/" + date.getFullYear();
+	var hour = zeros(date.getHours()) + ":" + zeros(date.getMinutes()) + ":" + zeros(date.getSeconds());
 	return day + " - " + hour;
 }
 
