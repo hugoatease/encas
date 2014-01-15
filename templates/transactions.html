@@ -1,6 +1,7 @@
 <table data-bind="with: transaction" class="table table-hover table-bordered">
 	<thead>
 		<tr>
+            <th data-bind="visible: show_account">Identifiant</th>
             <th data-bind="visible: show_account">Compte</th>
 			<th>Operation</th>
 			<th>Date</th>
@@ -12,6 +13,7 @@
 
 	<tbody data-bind="foreach: transactions">
 		<tr data-bind="css: state">
+            <td data-bind="visible: $parent.show_account, text: id"></td>
             <td data-bind="visible: $parent.show_account, if: $parent.show_account">
                 <span data-bind="text: account_number"></span> -
                 <span data-bind="text: account_lastname"></span> <span data-bind="text: account_firstname"></span>
@@ -28,7 +30,13 @@
                         <span class="label label-success">Non</span>
                     </span>
                     <span data-bind="if: revokes" class="label label-warning">
-                        Révoque la transaction <span data-bind="text: revokes_operation"></span>
+                        Révoque la transaction
+                        <span data-bind="ifnot: $parent.show_account">
+                            <span data-bind="text: revokes_operation"></span>
+                        </span>
+                        <span data-bind="if: $parent.show_account">
+                            <span data-bind="text: revokes"></span>
+                        </span>
                     </span>
                     &nbsp;<button data-bind="click: $parent.revoke" class="btn btn-xs btn-danger">Révoquer</button>
                 </span>

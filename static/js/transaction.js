@@ -32,10 +32,12 @@ var transactionModel = {
 			transactionModel.transactions(data);
 		}
 
-        if (all === undefined || all === true) {
+        if (all === true) {
             api.transaction.list(refresh.bind(transactionModel));
         }
-		api.transaction.listByAccount(refresh.bind(transactionModel), account_id, transactionModel.show_all);
+        else {
+		    api.transaction.listByAccount(refresh.bind(transactionModel), account_id, transactionModel.show_all);
+        }
 	},
 
     clear : function() {
