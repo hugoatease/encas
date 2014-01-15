@@ -14,6 +14,11 @@ var accountAdminModel = {
                 return;
             }
             var data = data.data;
+
+            for (var i=0; i < data.length; i++) {
+                data[i]['state'] = getAccountState(data[i].balance);
+            }
+
             accountAdminModel.accounts(data);
         }
         api.account.list(refresh, filter);

@@ -15,18 +15,7 @@ var transactionModel = {
 
 			for (var i=0; i < data.length; i++) {
 				data[i].date = formatDate(new Date(data[i].date));
-
-				if (data[i].balance < -10) {
-					data[i]['state'] = "danger";
-				}
-				else {
-					if (data[i].balance <= 0) {
-						data[i]['state'] = "warning";
-					}
-					else {
-						data[i]['state'] = "success";
-					}
-				}
+                data[i]['state'] = getAccountState(data[i].balance);
 			}
 
 			transactionModel.transactions(data);

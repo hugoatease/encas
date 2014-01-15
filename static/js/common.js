@@ -27,6 +27,24 @@ function formatDate(date) {
 	return day + " - " + hour;
 }
 
+function getAccountState(balance) {
+    var state;
+
+    if (balance < -10) {
+        state = "danger";
+    }
+    else {
+        if (balance <= 0) {
+            state = "warning";
+        }
+        else {
+            state = "success";
+        }
+    }
+
+    return state;
+}
+
 $("#encasSuccess button").click(function(ev) {
     ev.preventDefault();
     $("#encasSuccess").css("display", "none");
