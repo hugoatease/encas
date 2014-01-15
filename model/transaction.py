@@ -18,6 +18,7 @@
 
 from database import session
 from database import Transaction as TransactionModel
+from errors import ApiError
 
 import account
 
@@ -32,7 +33,11 @@ class Transaction:
 
     @staticmethod
     def get(transaction_id):
-        return session.query(TransactionModel).get(transaction_id)
+        result = session.query(TransactionModel).get(transaction_id)
+        if result is None:
+            raise ApiError("Transaction not found")
+
+        return result
 
     @staticmethod
     def list():
