@@ -8,6 +8,8 @@ var accountAdminModel = {
         balance : ko.observable()
     },
 
+    show_number : ko.observable(true),
+
     displayAccounts : function(filter) {
         function refresh(data) {
             if (reportError(data)) {
@@ -25,14 +27,17 @@ var accountAdminModel = {
     },
 
     display_active : function(target) {
+        accountAdminModel.show_number(true);
         accountAdminModel.displayAccounts("active");
     },
 
     display_deleted : function(target) {
+        accountAdminModel.show_number(false);
         accountAdminModel.displayAccounts("deleted");
     },
 
     display_debts : function(target) {
+        accountAdminModel.show_number(true);
         accountAdminModel.displayAccounts("debts");
     },
 

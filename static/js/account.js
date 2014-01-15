@@ -83,7 +83,7 @@ var accountModel = {
             accountModel.visible_intro(true);
             transactionModel.clear();
 
-            var message = "L'utilisateur " + data.number + " - " + data.lastname + " " + data.firstname + " a été supprimé"
+            var message = "L'utilisateur " + data.lastname + " " + data.firstname + " a été supprimé"
             reportSuccess(message);
         }
 

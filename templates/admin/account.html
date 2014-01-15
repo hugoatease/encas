@@ -40,19 +40,21 @@
             <table class="table table-hover table-bordered">
                     <thead>
                         <tr>
-                            <th>N°</th>
+                            <th data-bind="visible: show_number">N°</th>
                             <th>Nom</th>
+                            <th>Promotion</th>
                             <th>Solde</th>
                         </tr>
                     </thead>
 
                     <tbody data-bind="foreach: accounts">
                         <tr data-bind="css: state">
-                            <td data-bind="text: number"></td>
+                            <td data-bind="visible: $parent.show_number"><span data-bind="text: number"></span></td>
                             <td>
                                 <span data-bind="text: lastname"></span>
                                 <span data-bind="text: firstname"></span>
                             </td>
+                            <td data-bind="text: promo"></td>
                             <td><span data-bind="text: balance"></span> €</td>
                         </tr>
                     </tbody>
