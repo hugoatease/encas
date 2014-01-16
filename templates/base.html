@@ -10,23 +10,25 @@
 
 	<body>
 		{% include 'menu.html' %}
-		
+
 		<div class="container">
 			<div id="encasAlert" class="alert alert-danger" style="display: none;"></div>
             <div id="encasSuccess" class="alert alert-success" style="display: none;">
                 <span id="success_message"></span><br />
                 <p><button class="btn btn-default btn-sm">Fermer</button></p>
             </div>
+
 			{% block content %}{% endblock %}
 		</div>
 		
         {% include 'footer.html' %}
+
 		
 		<script type="text/javascript" src="/static/js/jquery-1.10.2.min.js"></script>
 		<script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
 		<script type="text/javascript" src="/static/js/knockout-3.0.0.js"></script>
+	        <script type="text/javascript" src="/static/js/common.js"></script>
 		<script type="text/javascript" src="/static/js/encasapi.js"></script>
-		<script type="text/javascript" src="/static/js/common.js"></script>
 		{% block javascript %}{% endblock %}
         {% include 'js_admin.html' %}
 	</body>

@@ -4,29 +4,39 @@
  */
 
 var api = {
+    wrapper : function(callback) {
+        wait.show();
+        function wrapped(data) {
+            var result = callback(data);
+            wait.hide();
+            return result;
+        }
+        return wrapped;
+    },
+
 	user : {
 		login : function(callback, username, password) {
 			var data = {'username' : username, 'password' : password};
-			jQuery.post('/login', data, callback);
+			jQuery.post('/login', data, api.wrapper(callback));
 		},
 		
 		logout : function(callback) {
-			jQuery.get('/logout', callback);
+			jQuery.get('/logout', api.wrapper(callback));
 		},
 
         list : function(callback) {
-            jQuery.get('/user/list', callback);
+            jQuery.get('/user/list', api.wrapper(callback));
         },
 
         create_admin : function(callback, username, password, password_confirm) {
             var url = '/user/admin/create';
             var data = {'username' : username, 'password' : password, 'password_confirm' : password_confirm};
-            jQuery.post(url, data, callback);
+            jQuery.post(url, data, api.wrapper(callback));
         },
 
         remove : function(callback, user_id) {
             var url = '/user/' + user_id + '/remove';
-            jQuery.post(url, callback);
+            jQuery.post(url, api.wrapper(callback));
         }
 	},
 	
@@ -36,22 +46,22 @@ var api = {
                 filter = "active";
             }
             var url = '/account/list/' + filter;
-			jQuery.get(url, callback);
+			jQuery.get(url, api.wrapper(callback));
 		},
 		
 		get : function(callback, account_id) {
 			var url = '/account/' + account_id;
-			jQuery.get(url, callback);
+			jQuery.get(url, api.wrapper(callback));
 		},
 		
 		getByNumber : function(callback, account_number) {
 			var url = '/account/number/' + account_number;
-			jQuery.get(url, callback);
+			jQuery.get(url, api.wrapper(callback));
 		},
 		
 		search : function(callback, firstname) {
 			var url = '/account/search/' + firstname;
-			jQuery.get(url, callback);
+			jQuery.get(url, api.wrapper(callback));
 		},
 		
 		create : function(callback, firstname, lastname, promo, number, balance) {
@@ -64,23 +74,23 @@ var api = {
                 data['balance'] = balance;
             }
 
-			jQuery.post('/account/create', data, callback);
+			jQuery.post('/account/create', data, api.wrapper(callback));
 		},
 		
 		edit : function(callback, account_id, firstname, lastname, promo) {
 			var url = '/account/' + account_id + '/edit';
 			var data = {'firstname' : firstname, 'lastname' : lastname, 'promo' : promo};
-			jQuery.post(url, data, callback);
+			jQuery.post(url, data, api.wrapper(callback));
 		},
 
         delete : function(callback, account_id) {
             var url = '/account/' + account_id + '/delete';
-            jQuery.post(url, callback);
+            jQuery.post(url, api.wrapper(callback));
         },
 		
 		balance : function(callback, account_id) {
 			var url = '/account/' + account_id + '/calculate';
-			jQuery.get(url, callback);
+			jQuery.get(url, api.wrapper(callback));
 		}
 	},
 	

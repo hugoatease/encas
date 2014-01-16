@@ -52,6 +52,16 @@ function getAccountState(balance) {
     return state;
 }
 
+var wait = {
+    show : function() {
+        $("#wait").show();
+    },
+
+    hide : function () {
+        $("#wait").hide();
+    }
+};
+
 $("#encasSuccess button").click(function(ev) {
     ev.preventDefault();
     $("#encasSuccess").css("display", "none");
