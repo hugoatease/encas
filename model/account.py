@@ -91,7 +91,7 @@ class Account:
         if filter not in ['active', 'deleted', 'debts']:
             raise ApiError("Wrong filter, must be one of these: active, deleted, debts")
 
-        if filter == "active":
+        if filter == "active" or filter=="debts":
             query = query.filter_by(deleted=False)
         elif filter == "deleted":
             query = query.filter_by(deleted=True)
