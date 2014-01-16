@@ -18,16 +18,26 @@
 #   You should have received a copy of the GNU General Public License
 #   along with Encas.  If not, see <http://www.gnu.org/licenses/>.
 
-from flask import Flask, jsonify, request, send_from_directory, url_for, redirect, render_template
+import config
+
+from flask import Flask, request, url_for, redirect, render_template
 app = Flask(__name__)
-app.secret_key = "z5f6rfqb1u5o8m4lk,13wr8er78h1d5x5dgd4568rh87i8ys3c2z781136941778"
-app.debug = True
+app.secret_key = config.SECRET
+app.debug = config.DEBUG
 app.config['WTF_CSRF_ENABLED'] = False
 
-from flask.ext.login import login_required, current_user, login_user, logout_user
+from flask.ext.login import login_required, login_user, logout_user
 from login import login_manager, UserHandler, login_required_api, admin_required
 login_manager.login_view = 'login'
 login_manager.init_app(app)
+
+from logging import FileHandler, Formatter
+file_handler = FileHandler(config.LOGFILE)
+file_handler.setFormatter(Formatter(
+    '%(asctime)s %(levelname)s: %(message)s '
+    '[in %(pathname)s:%(lineno)d]'
+))
+app.logger.addHandler(file_handler)
 
 from common import convert
 from model import Account, Transaction, User
