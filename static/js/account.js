@@ -20,8 +20,7 @@ var accountModel = {
 	
 	showAccountData: function (account_id) {
 		current.account_id = account_id;
-		
-		this.visible_intro(false);
+
 		this.visible_account_deletion(false);
 		this.visible_account_edition(false);
 	
@@ -40,6 +39,8 @@ var accountModel = {
 			
 			var date = new Date(data.creation);
 			this.date(formatDate(date));
+
+            this.visible_intro(false);
 		}
 		
 		function refreshBalance(data) {

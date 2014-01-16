@@ -4,11 +4,20 @@
  */
 
 var api = {
+    current_calls : 0,
+
     wrapper : function(callback) {
-        wait.show();
+        api.current_calls++;
+        if (api.current_calls === 1) {
+            wait.show();
+        }
+
         function wrapped(data) {
             var result = callback(data);
-            wait.hide();
+            api.current_calls--;
+            if (api.current_calls === 0) {
+                wait.hide();
+            }
             return result;
         }
         return wrapped;
@@ -102,21 +111,21 @@ var api = {
 			else {
 				var url = '/account/' + account_id + '/transactions/all';
 			}
-			jQuery.get(url, callback);
+			jQuery.get(url, api.wrapper(callback));
 		},
 
         list : function(callback) {
-            jQuery.get('/transaction/list', callback);
+            jQuery.get('/transaction/list', api.wrapper(callback));
         },
 		
 		add : function(callback, account_id, cash) {
 			var data = {'account_id' : account_id, 'cash' : cash};
-			jQuery.post('/transaction/add', data, callback);
+			jQuery.post('/transaction/add', data, api.wrapper(callback));
 		},
 		
 		revoke : function(callback, transaction_id) {
 			var url = '/transaction/' + transaction_id + '/revoke';
-			jQuery.post(url, callback);
+			jQuery.post(url, api.wrapper(callback));
 		}
 	}
 };
