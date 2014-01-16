@@ -1,5 +1,6 @@
 var accountModel = {
 	id: ko.observable(),
+	number : ko.observable(),
 	firstname: ko.observable(),
 	lastname: ko.observable(),
 	promo: ko.observable(),
@@ -30,7 +31,8 @@ var accountModel = {
 			}
 			var data = data.data;
 			
-			this.id("#" + data.id);
+			this.id(data.id);
+            this.number("#" + data.number);
 			this.firstname(data.firstname);
 			this.lastname(data.lastname);
 			this.promo(data.promo);

@@ -39,7 +39,7 @@
         <div data-bind="ifnot: visible_intro" class="col-md-4">
             <h2 data-bind="text: fullname"></h2><hr />
             <h3>
-                <span data-bind="text: id" class="label label-primary"></span>
+                <span data-bind="text: number" class="label label-primary"></span>
                 <span data-bind="text: promo" class="label label-success"></span>
                 <span data-bind="if: staff" class="label label-danger"></span>
             </h3>
@@ -76,7 +76,7 @@
                         <div class="form-group">
                             <div class="col-sm-9 col-sm-offset-3">
                                 <button type="submit" class="btn btn-primary">Modifier</button>
-                                <button data-bind="click: function() { visible_account_edition(false) }" class="btn btn-default">Annuler</button>
+                                <button data-bind="click: function() { $parent.visible_account_edition(false) }" class="btn btn-default">Annuler</button>
                             </div>
                         </div>
                     </div>
