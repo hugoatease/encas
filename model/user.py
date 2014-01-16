@@ -21,9 +21,12 @@ from database import User as UserModel
 from sqlalchemy.exc import IntegrityError
 from errors import ApiError
 
+from hashlib import sha1
+
 class User:
     @staticmethod
     def create(username, password):
+        password = sha1(password).hexdigest()
         user = UserModel(username=username, password=password)
         session.add(user)
         try:
@@ -36,6 +39,7 @@ class User:
 
     @staticmethod
     def login(username, password):
+        password = sha1(password).hexdigest()
         try:
             user = session.query(UserModel).filter_by(username=username, password=password, suspended=False).one()
         except:
