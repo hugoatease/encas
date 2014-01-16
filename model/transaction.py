@@ -18,6 +18,7 @@
 
 from database import session
 from database import Transaction as TransactionModel
+from database import Account as AccountModel
 from errors import ApiError
 
 from math import isinf
@@ -42,7 +43,9 @@ class Transaction:
 
     @staticmethod
     def list():
-        transactions = session.query(TransactionModel).order_by("date desc").all()
+        transactions = session.query(TransactionModel).join(AccountModel, AccountModel.id == TransactionModel.account) \
+            .filter(AccountModel.deleted == False).order_by("date desc").all()
+
         for transaction in transactions:
             acc = account.Account.get(transaction.account)
             transaction.account_number = acc.number
