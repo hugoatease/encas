@@ -20,6 +20,7 @@ from database import session
 from database import Transaction as TransactionModel
 from errors import ApiError
 
+from math import isinf
 import account
 
 class Transaction:
@@ -76,6 +77,9 @@ class Transaction:
 
     @classmethod
     def add(self, account_id, cash):
+        if isinf(cash):
+            raise ApiError("Transaction can't be created : entered price is too big.")
+
         try:
             last = self.getByAccount(account_id, 1)[0]
         except:
@@ -85,6 +89,9 @@ class Transaction:
             balance  = cash
         else:
             balance = last.balance + cash
+
+        if isinf(balance):
+            raise ApiError("Transaction can't be created : new account balance is out of bounds.")
 
         transaction = TransactionModel(account=account_id, operation=self.available(account_id), cash=cash, balance=balance)
         session.add(transaction)
