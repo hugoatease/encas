@@ -18,14 +18,11 @@
 #   You should have received a copy of the GNU General Public License
 #   along with Encas.  If not, see <http://www.gnu.org/licenses/>.
 
-import config
-
 from flask import Flask, request, url_for, redirect, render_template
+from common import FlaskConfig, file_handler, convert
 app = Flask(__name__)
-app.secret_key = config.SECRET
-app.debug = config.DEBUG
-app.config['WTF_CSRF_ENABLED'] = False
-app.config['SQLALCHEMY_DATABASE_URI'] = config.DATABASE_URI
+app.config.from_object(FlaskConfig)
+app.logger.addHandler(file_handler)
 
 from model.database import db
 db.init_app(app)
@@ -35,15 +32,6 @@ from login import login_manager, UserHandler, login_required_api, admin_required
 login_manager.login_view = 'login'
 login_manager.init_app(app)
 
-from logging import FileHandler, Formatter
-file_handler = FileHandler(config.LOGFILE)
-file_handler.setFormatter(Formatter(
-    '%(asctime)s %(levelname)s: %(message)s '
-    '[in %(pathname)s:%(lineno)d]'
-))
-app.logger.addHandler(file_handler)
-
-from common import convert
 from model import Account, Transaction, User
 from errors import errorhandler, ApiError, MissingFieldsError
 import forms

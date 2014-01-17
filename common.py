@@ -16,9 +16,23 @@
 #   You should have received a copy of the GNU General Public License
 #   along with Encas.  If not, see <http://www.gnu.org/licenses/>.
 
+import config
 import random
-from flask import request
-from errors import ApiError, MissingFieldsError
+from errors import ApiError
+
+from logging import FileHandler, Formatter
+file_handler = FileHandler(config.LOGFILE)
+file_handler.setFormatter(Formatter(
+    '%(asctime)s %(levelname)s: %(message)s '
+    '[in %(pathname)s:%(lineno)d]'
+))
+
+class FlaskConfig:
+    DEBUG = config.DEBUG
+    SECRET_KEY = config.SECRET
+    WTF_CSRF_ENABLED = False
+    SQLALCHEMY_DATABASE_URI = config.DATABASE_URI
+
 
 class Token:
     def __init__(self, length=50, capitals = True):
