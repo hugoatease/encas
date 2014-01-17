@@ -67,7 +67,7 @@ $("#encasSuccess button").click(function(ev) {
     $("#encasSuccess").css("display", "none");
 })
 
-Mousetrap.bind("g c", function(ev) {
+Mousetrap.bind(["g c", "g h"], function(ev) {
     ev.preventDefault();
     window.location.pathname = "/";
 });
