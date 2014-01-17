@@ -1,16 +1,20 @@
 var current = {
 	account_id : undefined, // Current account number
-	search_callback: undefined, // Callback takes account number as parameter
+	search_callback: undefined // Callback takes account number as parameter
 };
 
-function reportError(data) {
+function reportError(data, ajax) {
 	var alertbar = $("#encasAlert");
 	if (data.error) {
 		alertbar.html("<b>Erreur</b> : " + data.reason);
         alertbar.show();
 		return true;
 	}
-	alertbar.css("display", "none");
+
+    if (ajax === undefined || ajax === false) {
+	    alertbar.css("display", "none");
+    }
+
 	return false;
 }
 

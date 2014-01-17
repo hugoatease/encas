@@ -23,29 +23,63 @@ var api = {
         return wrapped;
     },
 
+    ajax : function(method, url, callback, data) {
+        var settings = {
+            url : url,
+            success : callback,
+            error : this.ajaxerror(url)
+        };
+
+        if (method === undefined) { method = 'GET'; }
+        settings.type = method;
+
+        if (data !== undefined) {
+            settings.data = data;
+        }
+
+        jQuery.ajax(url, settings);
+    },
+
+    ajaxerror : function(url) {
+        function error(xhr, status, error) {
+            var message = "Une erreur s'est produite pendant l'appel au serveur. Contactez un administrateur si elle persiste.";
+            message += "<br />Addresse: " + url + ". Code d'erreur : " + xhr.status + " " + error + ".";
+            message += " Statut jQuery: " + status + ".";
+
+            wait.hide();
+
+            reportError({
+                error : true,
+                reason : message
+            }, true);
+        }
+
+        return error;
+    },
+
 	user : {
 		login : function(callback, username, password) {
 			var data = {'username' : username, 'password' : password};
-			jQuery.post('/login', data, api.wrapper(callback));
+            api.ajax('POST', '/login', api.wrapper(callback), data);
 		},
 		
 		logout : function(callback) {
-			jQuery.get('/logout', api.wrapper(callback));
+            api.ajax('GET', '/logout', api.wrapper(callback));
 		},
 
         list : function(callback) {
-            jQuery.get('/user/list', api.wrapper(callback));
+            api.ajax('GET', '/user/list', api.wrapper(callback));
         },
 
         create_admin : function(callback, username, password, password_confirm) {
             var url = '/user/admin/create';
             var data = {'username' : username, 'password' : password, 'password_confirm' : password_confirm};
-            jQuery.post(url, data, api.wrapper(callback));
+            api.ajax('POST', url, api.wrapper(callback), data);
         },
 
         remove : function(callback, user_id) {
             var url = '/user/' + user_id + '/remove';
-            jQuery.post(url, api.wrapper(callback));
+            api.ajax('POST', url, api.wrapper(callback));
         }
 	},
 	
@@ -55,22 +89,22 @@ var api = {
                 filter = "active";
             }
             var url = '/account/list/' + filter;
-			jQuery.get(url, api.wrapper(callback));
+            api.ajax('GET', url, api.wrapper(callback));
 		},
 		
 		get : function(callback, account_id) {
 			var url = '/account/' + account_id;
-			jQuery.get(url, api.wrapper(callback));
+            api.ajax('GET', url, api.wrapper(callback));
 		},
 		
 		getByNumber : function(callback, account_number) {
 			var url = '/account/number/' + account_number;
-			jQuery.get(url, api.wrapper(callback));
+            api.ajax('GET', url, api.wrapper(callback));
 		},
 		
 		search : function(callback, firstname) {
 			var url = '/account/search/' + firstname;
-			jQuery.get(url, api.wrapper(callback));
+            api.ajax('GET', url, api.wrapper(callback));
 		},
 		
 		create : function(callback, firstname, lastname, promo, number, balance) {
@@ -83,23 +117,23 @@ var api = {
                 data['balance'] = balance;
             }
 
-			jQuery.post('/account/create', data, api.wrapper(callback));
+            api.ajax('POST', '/account/create', api.wrapper(callback), data);
 		},
 		
 		edit : function(callback, account_id, firstname, lastname, promo) {
 			var url = '/account/' + account_id + '/edit';
 			var data = {'firstname' : firstname, 'lastname' : lastname, 'promo' : promo};
-			jQuery.post(url, data, api.wrapper(callback));
+            api.ajax('POST', url, api.wrapper(callback), data);
 		},
 
         delete : function(callback, account_id) {
             var url = '/account/' + account_id + '/delete';
-            jQuery.post(url, api.wrapper(callback));
+            api.ajax('POST', url, api.wrapper(callback));
         },
 		
 		balance : function(callback, account_id) {
 			var url = '/account/' + account_id + '/calculate';
-			jQuery.get(url, api.wrapper(callback));
+            api.ajax('GET', url, api.wrapper(callback));
 		}
 	},
 	
@@ -111,21 +145,21 @@ var api = {
 			else {
 				var url = '/account/' + account_id + '/transactions/all';
 			}
-			jQuery.get(url, api.wrapper(callback));
+            api.ajax('GET', url, api.wrapper(callback));
 		},
 
         list : function(callback) {
-            jQuery.get('/transaction/list', api.wrapper(callback));
+            api.ajax('GET', '/transaction/list', api.wrapper(callback));
         },
 		
 		add : function(callback, account_id, cash) {
 			var data = {'account_id' : account_id, 'cash' : cash};
-			jQuery.post('/transaction/add', data, api.wrapper(callback));
+            api.ajax('POST', '/transaction/add', api.wrapper(callback), data);
 		},
 		
 		revoke : function(callback, transaction_id) {
 			var url = '/transaction/' + transaction_id + '/revoke';
-			jQuery.post(url, api.wrapper(callback));
+            api.ajax('POST', url, api.wrapper(callback));
 		}
 	}
 };
