@@ -47,6 +47,7 @@ var api = {
             message += " Statut jQuery: " + status + ".";
 
             wait.hide();
+            this.current_calls = 0;
 
             reportError({
                 error : true,
