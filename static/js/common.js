@@ -66,3 +66,19 @@ $("#encasSuccess button").click(function(ev) {
     ev.preventDefault();
     $("#encasSuccess").css("display", "none");
 })
+
+Mousetrap.bind("g c", function(ev) {
+    ev.preventDefault();
+    window.location.pathname = "/";
+});
+
+Mousetrap.bind("g m", function(ev) {
+    ev.preventDefault();
+    window.location.pathname = "/account";
+});
+
+Mousetrap.bind("g a", function(ev) {
+    console.log("Hello");
+    ev.preventDefault();
+    window.location.pathname = "/admin";
+});

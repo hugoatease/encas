@@ -2,7 +2,6 @@
 {% block title %} - Caisse{% endblock %}
 
 {% block javascript %}
-<script type="text/javascript" src="/static/js/mousetrap.min.js"></script>
 <script type="text/javascript" src="/static/js/search.js"></script>
 <script type="text/javascript" src="/static/js/checkout.js"></script>
 <script type="text/javascript" src="/static/js/transaction.js"></script>
@@ -27,6 +26,14 @@
         checkoutModel.getBalance(account_id);
         checkoutModel.checkout_focus(true);
     };
+
+
+    Mousetrap.bindGlobal('escape', function(ev) {
+        ev.preventDefault();
+        boxes.number.hide();
+        boxes.name.hide();
+        checkoutModel.checkout_focus(false);
+    })
 </script>
 {% endblock %}
 
@@ -39,35 +46,56 @@
 			{% include 'transactions.html' %}
 		</div>
 		
-		<div class="col-md-4">
+		<div data-bind="with: checkout" class="col-md-4">
 			<h3>Bienvenue</h3><hr />
-			<p>Dans <b>Encas</b>, application de gestion de la Maison ISEN.</p>
 			<p>La <b>barre d'outils</b> en haut de la page parmet de <b>rechercher</b> un étudiant par
-				son <b>numéro de compte</b> ou son <b>nom de famille.</b><br />
+				son <b>numéro de compte</b> ou son <b>nom de famille</b>.
 			</p>
 			<p>
 				Effectuez des <b>transactions</b> sur le compte sélectionné en rentrant le <b>montant de l'opération</b>
-				dans la barre <b><i>Montant</i></b> en bas de page.<br />
+				dans la barre <b><i>Montant</i></b> en bas de page.
 			</p>
-			<p><b>Si vous faites une erreur</b>, révoquez la transaction puis réeffectuez la.</p>
+			<p><b>Si vous faites une erreur</b>, révoquez la transaction sur la page <b>Comptes</b> puis réeffectuez la.</p>
+
+            <button data-bind="click: function() { show_keyhelp(true); }" class="btn btn-link">Raccourcis clavier</button>
+
+            <div data-bind="visible: show_keyhelp" class="alert alert-info">
+                <p>
+                    Afficher la recherche par numéro: <b>o</b><br />
+                    Afficher la recherche par nom: <b>p</b><br />
+                    Entrer un montant : <b>Entrée</b><br />
+                    Sortir de la recherche/du champ montant : <b>Echap</b>
+                </p>
+
+                <p>
+                    Aller à la caisse : g - c<br />
+                    Aller à la gestion des comptes : g - m<br />
+                    Aller à l'administration : g - a<br />
+                    <i>Les touches d'accès doivent être tapées en séquence, l'une après l'autre.</i>
+                </p>
+
+                <button data-bind="click: function() { show_keyhelp(false); }" class="btn btn-default">Fermer</button>
+            </div>
 		</div>
 
 
 	</div>
 	
 	<div data-bind="with: checkout" class="row">
-		<center>
-			<p><b>Solde : <span data-bind="text: balance"> </span>€</b></p>
-			<form data-bind="submit: make_checkout" id="checkout" class="form-inline" role="form">
-				<div class="form-group">
-					<div class="input-group">
-						<input data-bind="hasFocus: checkout_focus, value: checkout_price" class="form-control" type="text" placeholder="Montant">
-						<span class="input-group-addon">€</span>
-					</div>
-				</div>
-				<button type="submit" class="btn btn-primary">Go !</button>
-			</form>
-        </center>
+        <div class="col-md-4 col-md-offset-4">
+            <h4 data-bind="visible: show_balance" align="center"><b>Solde : <span data-bind="text: balance"> </span>€</b></h4>
+            <center>
+                <form data-bind="submit: make_checkout" id="checkout" class="form-inline" role="form">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <input data-bind="hasFocus: checkout_focus, value: checkout_price" class="form-control" type="text" placeholder="Montant">
+                            <span class="input-group-addon">€</span>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Go !</button>
+                </form>
+            </center>
+        </div>
 	</div>
 
 {% endblock %}

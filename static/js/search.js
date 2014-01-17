@@ -160,9 +160,3 @@ Mousetrap.bind('p', function(ev) {
     ev.preventDefault();
     boxes.click("name");
 })
-
-Mousetrap.bind('escape', function(ev) {
-    ev.preventDefault();
-    boxes.number.hide();
-    boxes.name.hide();
-})
