@@ -23,6 +23,7 @@ from errors import ApiError
 
 from math import isinf
 import account
+import config
 
 class Transaction:
     @staticmethod
@@ -70,7 +71,7 @@ class Transaction:
 
     @classmethod
     def calculateBalance(self, account_id):
-        transactions = self.getByAccount(account_id, None, True)
+        transactions = self.getByAccount(account_id, None, False)
 
         cash = 0
         for transaction in transactions:
@@ -97,6 +98,9 @@ class Transaction:
 
         if isinf(balance):
             raise ApiError("Transaction can't be created : new account balance is out of bounds.")
+
+        if balance > config.MAX_BALANCE or balance < - config.MAX_BALANCE:
+            raise ApiError("Transaction makes account balance beyond the " + str(config.MAX_BALANCE) + " limit.")
 
         transaction = TransactionModel(account=account_id, operation=self.available(account_id), cash=cash, balance=balance)
         db.session.add(transaction)
