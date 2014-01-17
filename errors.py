@@ -36,9 +36,18 @@ class MissingFieldsError(Exception):
         self.fields.sort()
     
     def reason(self):
+        fields_len = len(self.fields)
+        i = 0
+
         msg = "Missing fields: "
         for field in self.fields:
-            msg += str(field) + ", "
+            msg += str(field)
+            if i < fields_len - 1:
+                msg += ", "
+            else:
+                msg += "."
+            i += 1
+
         return msg
     
     def __str__(self):
