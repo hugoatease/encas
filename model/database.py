@@ -16,23 +16,16 @@
 #   You should have received a copy of the GNU General Public License
 #   along with Encas.  If not, see <http://www.gnu.org/licenses/>.
 
-import config
 from common import Token
 from datetime import datetime
 
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, relationship, backref
-from sqlalchemy.ext.declarative import declarative_base
+from flask.ext.sqlalchemy import SQLAlchemy
+from sqlalchemy.orm import relationship, backref
 from sqlalchemy.schema import Column, ForeignKey
 from sqlalchemy.types import Integer, Float, String, DateTime, Boolean
 from sqlalchemy.sql.expression import true, false
 
-engine = create_engine(config.DATABASE_URI)
-
-Base = declarative_base(bind=engine)
-Session = sessionmaker(bind=engine)
-
-session = Session()
+db = SQLAlchemy()
 
 def serialization(result, initial=None):
     serialized = {}
@@ -47,7 +40,7 @@ def serialization(result, initial=None):
 
     return serialized
 
-class Account(Base):
+class Account(db.Model):
     __tablename__ = 'accounts'
     id =  Column(Integer, primary_key=True, nullable=False)
     creation = Column(DateTime, nullable=False, default=datetime.utcnow)
@@ -73,7 +66,7 @@ class Account(Base):
     def __str__(self):
         return "<Account: #" + str(self.id) + " - " + self.lastname + " " + self.firstname + ">"
 
-class Transaction(Base):
+class Transaction(db.Model):
     __tablename__ = "transactions"
     id =  Column(Integer, primary_key=True, nullable=False)
     account = Column(Integer, ForeignKey('accounts.id'), nullable=False)
@@ -89,7 +82,7 @@ class Transaction(Base):
     to_serialize = []
     def serialize(self):
         try:
-            revokes = session.query(Transaction).filter_by(id=self.revokes).one()
+            revokes = db.session.query(Transaction).filter_by(id=self.revokes).one()
             revokes_operation = revokes.operation
         except:
             revokes_operation = None
@@ -103,7 +96,7 @@ class Transaction(Base):
     def __str__(self):
         return "<Transaction: #" + str(self.id) + " - Cash: " + str(self.cash) + " Balance: " + str(self.balance) + ">"
 
-class User(Base):
+class User(db.Model):
     __tablename__ = "users"
     id =  Column(Integer, primary_key=True, nullable=False)
     
@@ -117,8 +110,8 @@ class User(Base):
     
     def update_token(self):
         self.token = Token(length=50).make()
-        session.add(self)
-        session.commit()
+        db.session.add(self)
+        db.session.commit()
     
     def serialize(self):
         return {'id' : self.id, 'username' : self.username, 'admin' : self.admin}

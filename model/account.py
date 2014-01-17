@@ -16,7 +16,7 @@
 #   You should have received a copy of the GNU General Public License
 #   along with Encas.  If not, see <http://www.gnu.org/licenses/>.
 
-from database import session
+from database import db
 from database import Account as AccountModel
 import transaction
 from sqlalchemy.orm.exc import NoResultFound
@@ -25,10 +25,10 @@ from errors import ApiError
 class Account:
     @staticmethod
     def available():
-        if session.query(AccountModel).filter_by(deleted=False).count() == 0:
+        if db.session.query(AccountModel).filter_by(deleted=False).count() == 0:
             return 1
         else:
-            accounts = session.query(AccountModel).filter_by(deleted=False).order_by("number asc").all()
+            accounts = db.session.query(AccountModel).filter_by(deleted=False).order_by("number asc").all()
 
             previous = 0
             for account in accounts:
@@ -59,15 +59,15 @@ class Account:
             raise ApiError("Account number " + str(number) + " is already taken, try another one.")
 
         account = AccountModel(number=number, firstname=firstname, lastname=lastname, promo=promo)
-        session.add(account)
-        session.commit()
+        db.session.add(account)
+        db.session.commit()
 
         return account
 
     @staticmethod
     def get(id):
         try:
-            account = session.query(AccountModel).filter_by(id=id).one()
+            account = db.session.query(AccountModel).filter_by(id=id).one()
         except NoResultFound:
             raise ApiError("Account not found")
         return account
@@ -75,18 +75,18 @@ class Account:
     @staticmethod
     def getByNumber(number):
         try:
-            return session.query(AccountModel).filter_by(deleted=False).filter_by(number=number).one()
+            return db.session.query(AccountModel).filter_by(deleted=False).filter_by(number=number).one()
         except NoResultFound:
             raise ApiError("Account not found")
 
     @staticmethod
     def search(firstname):
         filter = firstname + '%'
-        return session.query(AccountModel).filter_by(deleted=False).filter(AccountModel.firstname.ilike(filter)).all()
+        return db.session.query(AccountModel).filter_by(deleted=False).filter(AccountModel.firstname.ilike(filter)).all()
 
     @staticmethod
     def list(filter="active", balance=True):
-        query = session.query(AccountModel).order_by("number desc")
+        query = db.session.query(AccountModel).order_by("number desc")
 
         if filter not in ['active', 'deleted', 'debts']:
             raise ApiError("Wrong filter, must be one of these: active, deleted, debts")
@@ -127,12 +127,12 @@ class Account:
             if key in allowed:
                 setattr(self.account, key, fields[key])
 
-        session.commit()
+        db.session.commit()
         return self.account
 
     def delete(self):
         self.account.number = None
         self.account.deleted = True
-        session.add(self.account)
-        session.commit()
+        db.session.add(self.account)
+        db.session.commit()
         return self.account

@@ -16,7 +16,7 @@
 #   You should have received a copy of the GNU General Public License
 #   along with Encas.  If not, see <http://www.gnu.org/licenses/>.
 
-from database import session
+from database import db
 from database import Transaction as TransactionModel
 from database import Account as AccountModel
 from errors import ApiError
@@ -27,15 +27,15 @@ import account
 class Transaction:
     @staticmethod
     def available(account_id):
-        if session.query(TransactionModel).filter_by(account=account_id).count() == 0:
+        if db.session.query(TransactionModel).filter_by(account=account_id).count() == 0:
             return 1
         else:
-            result = session.query(TransactionModel).filter_by(account=account_id).order_by("operation desc").first()
+            result = db.session.query(TransactionModel).filter_by(account=account_id).order_by("operation desc").first()
             return result.operation + 1
 
     @staticmethod
     def get(transaction_id):
-        result = session.query(TransactionModel).get(transaction_id)
+        result = db.session.query(TransactionModel).get(transaction_id)
         if result is None:
             raise ApiError("Transaction not found")
 
@@ -43,7 +43,7 @@ class Transaction:
 
     @staticmethod
     def list():
-        transactions = session.query(TransactionModel).join(AccountModel, AccountModel.id == TransactionModel.account) \
+        transactions = db.session.query(TransactionModel).join(AccountModel, AccountModel.id == TransactionModel.account) \
             .filter(AccountModel.deleted == False).order_by("date desc").all()
 
         for transaction in transactions:
@@ -58,7 +58,7 @@ class Transaction:
     @staticmethod
     def getByAccount(account_id, max=None, exclude_revoked=False):
         account.Account.get(account_id) # Raises exception if account doesn't exist.
-        query = session.query(TransactionModel).filter_by(account=account_id)
+        query = db.session.query(TransactionModel).filter_by(account=account_id)
         if exclude_revoked:
             query = query.filter_by(revoked=False)
         query = query.order_by("operation desc")
@@ -97,8 +97,8 @@ class Transaction:
             raise ApiError("Transaction can't be created : new account balance is out of bounds.")
 
         transaction = TransactionModel(account=account_id, operation=self.available(account_id), cash=cash, balance=balance)
-        session.add(transaction)
-        session.commit()
+        db.session.add(transaction)
+        db.session.commit()
         return transaction
 
     def __init__(self, transaction_id):
@@ -106,11 +106,11 @@ class Transaction:
 
     def revoke(self):
         self.transaction.revoked = True
-        session.add(self.transaction)
+        db.session.add(self.transaction)
 
         inverse = self.add(self.transaction.account, -self.transaction.cash)
         inverse.revokes = self.transaction.id
-        session.add(inverse)
+        db.session.add(inverse)
 
-        session.commit()
+        db.session.commit()
         return self.transaction

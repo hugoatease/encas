@@ -16,7 +16,7 @@
 #   You should have received a copy of the GNU General Public License
 #   along with Encas.  If not, see <http://www.gnu.org/licenses/>.
 
-from database import session
+from database import db
 from database import User as UserModel
 from sqlalchemy.exc import IntegrityError
 from errors import ApiError
@@ -28,11 +28,11 @@ class User:
     def create(username, password):
         password = sha1(password).hexdigest()
         user = UserModel(username=username, password=password)
-        session.add(user)
+        db.session.add(user)
         try:
-            session.commit()
+            db.session.commit()
         except IntegrityError:
-            session.rollback()
+            db.session.rollback()
             raise ApiError("Error during account creation")
 
         return user
@@ -41,7 +41,7 @@ class User:
     def login(username, password):
         password = sha1(password).hexdigest()
         try:
-            user = session.query(UserModel).filter_by(username=username, password=password, suspended=False).one()
+            user = db.session.query(UserModel).filter_by(username=username, password=password, suspended=False).one()
         except:
             return None
 
@@ -53,19 +53,19 @@ class User:
 
     @staticmethod
     def get(user_id):
-        return session.query(UserModel).get(user_id)
+        return db.session.query(UserModel).get(user_id)
 
     @staticmethod
     def getByUsername(username):
-        return session.query(UserModel).filter_by(username=username).one()
+        return db.session.query(UserModel).filter_by(username=username).one()
 
     @staticmethod
     def list():
-        return session.query(UserModel).filter_by(suspended=False).all()
+        return db.session.query(UserModel).filter_by(suspended=False).all()
 
     @staticmethod
     def getByToken(token):
-        q = session.query(User).filter_by(token=token, suspended=False)
+        q = db.session.query(User).filter_by(token=token, suspended=False)
         if q.count() == 0:
             return None
         return q.one()
@@ -85,18 +85,18 @@ class User:
         self.user = self.get(id)
 
     def remove(self):
-        session.delete(self.user)
-        session.commit()
+        db.session.delete(self.user)
+        db.session.commit()
         return self.user
 
     def makeAdmin(self):
         self.user.admin = True
-        session.add(self.user)
-        session.commit()
+        db.session.add(self.user)
+        db.session.commit()
         return self.user
 
     def removeAdmin(self):
         self.user.admin = False
-        session.add(self.user)
-        session.commit()
+        db.session.add(self.user)
+        db.session.commit()
         return self.user

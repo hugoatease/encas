@@ -25,6 +25,10 @@ app = Flask(__name__)
 app.secret_key = config.SECRET
 app.debug = config.DEBUG
 app.config['WTF_CSRF_ENABLED'] = False
+app.config['SQLALCHEMY_DATABASE_URI'] = config.DATABASE_URI
+
+from model.database import db
+db.init_app(app)
 
 from flask.ext.login import login_required, login_user, logout_user
 from login import login_manager, UserHandler, login_required_api, admin_required
