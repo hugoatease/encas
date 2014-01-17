@@ -75,6 +75,8 @@ class Transaction:
         cash = 0
         for transaction in transactions:
             cash += transaction.cash
+            if isinf(cash):
+                raise ApiError("Transaction can't be created : new account balance is out of bounds.")
 
         return cash
 
