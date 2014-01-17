@@ -70,6 +70,7 @@ var accountModel = {
 			}
 			var data = data.data;
 			accountModel.showAccountData(data.id);
+            showAccount(data.number);
 		}
 		
 		api.account.edit(refresh, current.account_id, accountModel.edited.firstname(), accountModel.edited.lastname(), accountModel.edited.promo());
