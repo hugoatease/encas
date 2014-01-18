@@ -70,12 +70,26 @@ class Transaction:
         return query.all()
 
     @classmethod
-    def getBalance(self, account_id):
-        transactions = self.getByAccount(account_id, 5)
+    def getBalance(self, account_id, verify=True, verify_depth=5):
+        transactions = self.getByAccount(account_id, verify_depth)
         if len(transactions) == 0:
             return 0
 
         balance = transactions[0].balance
+
+        if verify:
+            transactions.reverse()
+            cash = transactions[0].balance
+            for transaction in transactions[1:]:
+                cash += transaction.cash
+                if transaction.balance != cash:
+                    message = "Account balance verification failed: " \
+                        + "Operation " + str(transaction.operation) + " is corrupted."
+                    raise ApiError(message)
+
+            if cash != balance:
+                raise ApiError("Account balance verification failed.")
+
         return balance
 
     @classmethod

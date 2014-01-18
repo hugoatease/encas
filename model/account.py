@@ -99,7 +99,7 @@ class Account:
         accounts = query.all()
         if balance or filter == "debts":
             for account in accounts:
-                balance = transaction.Transaction.getBalance(account.id)
+                balance = transaction.Transaction.getBalance(account.id, verify=False)
                 account.balance = balance
                 account.to_serialize.append('balance')
 
