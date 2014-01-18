@@ -45,6 +45,9 @@ var transactionModel = {
             reportSuccess("L'opération " + data.operation + " a été révoquée.");
 
             transactionModel.getTransactions(current.account_id);
+            if (accountModel !== undefined) {
+                accountModel.showAccountData(current.account_id);
+            }
         }
 
         api.transaction.revoke(refresh, transaction_id);
