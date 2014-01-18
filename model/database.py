@@ -26,6 +26,7 @@ from sqlalchemy.types import Integer, Float, String, DateTime, Boolean
 from sqlalchemy.sql.expression import true, false
 
 db = SQLAlchemy()
+Base = db.make_declarative_base()
 
 def serialization(result, initial=None):
     serialized = {}
