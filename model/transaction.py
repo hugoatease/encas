@@ -70,6 +70,15 @@ class Transaction:
         return query.all()
 
     @classmethod
+    def getBalance(self, account_id):
+        transactions = self.getByAccount(account_id, 5)
+        if len(transactions) == 0:
+            return 0
+
+        balance = transactions[0].balance
+        return balance
+
+    @classmethod
     def calculateBalance(self, account_id):
         transactions = self.getByAccount(account_id, None, False)
 

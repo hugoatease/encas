@@ -132,8 +132,13 @@ var api = {
             api.ajax('POST', url, api.wrapper(callback));
         },
 		
-		balance : function(callback, account_id) {
-			var url = '/account/' + account_id + '/calculate';
+		balance : function(callback, account_id, calculate) {
+            if (calculate === undefined || calculate === false) {
+                var url = '/account/' + account_id + '/balance';
+            }
+			else {
+                var url = '/account/' + account_id + '/calculate';
+            }
             api.ajax('GET', url, api.wrapper(callback));
 		}
 	},

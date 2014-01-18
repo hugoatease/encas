@@ -151,6 +151,13 @@ def deleteAccount(id):
 
     return Account(id=id).delete().serialize()
 
+@app.route('/account/<id>/balance', methods=['GET'])
+@login_required_api
+@errorhandler
+def getBalance(id):
+    id = convert(int, id)
+    return {'balance' : Transaction.getBalance(id)}
+
 @app.route('/account/<id>/calculate', methods=['GET'])
 @login_required_api
 @errorhandler
