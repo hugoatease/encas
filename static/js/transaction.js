@@ -44,7 +44,13 @@ var transactionModel = {
 
             reportSuccess("L'opération " + data.operation + " a été révoquée.");
 
-            transactionModel.getTransactions(current.account_id);
+            if (current.account_id !== undefined) {
+                transactionModel.getTransactions(current.account_id);
+            }
+            else {
+                transactionModel.getTransactions(undefined, true);
+            }
+
             if (accountModel !== undefined) {
                 accountModel.showAccountData(current.account_id);
             }
