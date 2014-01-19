@@ -44,6 +44,12 @@ class Account:
 
     @classmethod
     def create(self, firstname, lastname, promo, number=None):
+        if len(firstname) > 64 or len(lastname) > 64:
+            raise ApiError("Account name is too long.")
+
+        if number is not None and number < 1:
+            raise ApiError("Account number must be greater than 0")
+
         error = False
         if number is not None:
             try:
