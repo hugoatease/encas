@@ -126,13 +126,17 @@ var boxes = {
 
 $("#searchByIDForm").submit(function(ev) {
 	ev.preventDefault();
-	getAccount();
-	boxes.number.hide();
+    if ($("#search_number_box #accountNumberInput").val() !== '') {
+        getAccount();
+        boxes.number.hide();
+    }
 });
 
 $("#searchByNameForm").submit(function(ev) {
 	ev.preventDefault();
-	searchAccountByName();
+    if ($("#searchByNameForm #nameInput").val() !== '') {
+	    searchAccountByName();
+    }
 });
 
 $("#search_nb").click(function(ev) {
