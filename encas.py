@@ -27,7 +27,7 @@ app.logger.addHandler(file_handler)
 from model.database import db
 db.init_app(app)
 
-from flask.ext.login import login_required, login_user, logout_user
+from flask.ext.login import login_required, login_user, logout_user, current_user
 from login import login_manager, UserHandler, login_required_api, admin_required
 login_manager.login_view = 'login'
 login_manager.init_app(app)
@@ -228,6 +228,9 @@ def adminCreation():
 @admin_required
 def userRemove(id):
     id = convert(int, id)
+    if id == current_user.get_id():
+        raise ApiError("You can't delete your own account.")
+
     return User(id).remove().serialize()
 
 if __name__ == '__main__':
