@@ -64,9 +64,12 @@ class Account:
         if error:
             raise ApiError("Account number " + str(number) + " is already taken, try another one.")
 
-        account = AccountModel(number=number, firstname=firstname, lastname=lastname, promo=promo)
-        db.session.add(account)
-        db.session.commit()
+        try:
+            account = AccountModel(number=number, firstname=firstname, lastname=lastname, promo=promo)
+            db.session.add(account)
+            db.session.commit()
+        except:
+            raise ApiError("Error while creating account.")
 
         return account
 
@@ -84,6 +87,8 @@ class Account:
             return db.session.query(AccountModel).filter_by(deleted=False).filter_by(number=number).one()
         except NoResultFound:
             raise ApiError("Account not found")
+        except:
+            raise ApiError("Error while retrieving account " + str(number) + ".")
 
     @staticmethod
     def search(firstname):
