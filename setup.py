@@ -1,5 +1,6 @@
 from getpass import getpass
 from model import User
+from encas import app
 
 print "Administrator account creation"
 username = raw_input("Username: ")
@@ -10,5 +11,6 @@ while True:
 	if password == confirm:
 		break
 
-new = User.create(username, password)
-User(new.id).makeAdmin()
+with app.app_context():
+	new = User.create(username, password)
+	User(new.id).makeAdmin()
