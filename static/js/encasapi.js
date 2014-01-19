@@ -10,6 +10,7 @@ var api = {
         api.current_calls++;
         if (api.current_calls === 1) {
             wait.show();
+            reportError();
         }
 
         function wrapped(data) {
@@ -52,7 +53,7 @@ var api = {
             reportError({
                 error : true,
                 reason : message
-            }, true);
+            });
         }
 
         return error;
