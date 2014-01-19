@@ -25,6 +25,8 @@ from sqlalchemy.schema import Column, ForeignKey
 from sqlalchemy.types import Integer, Float, String, DateTime, Boolean
 from sqlalchemy.sql.expression import true, false
 
+STRING_SIZE = 64
+
 db = SQLAlchemy()
 Base = db.make_declarative_base()
 
@@ -47,9 +49,9 @@ class Account(db.Model):
     creation = Column(DateTime, nullable=False, default=datetime.utcnow)
     
     number = Column(Integer, unique=True)
-    firstname = Column(String, nullable=False)
-    lastname = Column(String, nullable=False)
-    promo = Column(String)
+    firstname = Column(String(length=STRING_SIZE), nullable=False)
+    lastname = Column(String(length=STRING_SIZE), nullable=False)
+    promo = Column(String(length=STRING_SIZE))
     staff = Column(Boolean, nullable=False, default=False)
 
     deleted = Column(Boolean, nullable=False, default=False, server_default=false())
@@ -101,8 +103,8 @@ class User(db.Model):
     __tablename__ = "users"
     id =  Column(Integer, primary_key=True, nullable=False)
     
-    username = Column(String, nullable=False, unique=True)
-    password = Column(String, nullable=False)
+    username = Column(String(length=STRING_SIZE), nullable=False, unique=True)
+    password = Column(String(length=64), nullable=False)
     
     admin = Column(Boolean, nullable=False, default=False)
     suspended = Column(Boolean, nullable=False, default=False)

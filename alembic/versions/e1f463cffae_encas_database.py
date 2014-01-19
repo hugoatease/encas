@@ -1,13 +1,13 @@
 """Encas database
 
-Revision ID: 12250621d04b
+Revision ID: e1f463cffae
 Revises: None
-Create Date: 2014-01-15 16:22:50.186798
+Create Date: 2014-01-19 14:40:02.333623
 
 """
 
 # revision identifiers, used by Alembic.
-revision = '12250621d04b'
+revision = 'e1f463cffae'
 down_revision = None
 
 from alembic import op
@@ -20,9 +20,9 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('creation', sa.DateTime(), nullable=False),
     sa.Column('number', sa.Integer(), nullable=True),
-    sa.Column('firstname', sa.String(), nullable=False),
-    sa.Column('lastname', sa.String(), nullable=False),
-    sa.Column('promo', sa.String(), nullable=True),
+    sa.Column('firstname', sa.String(length=64), nullable=False),
+    sa.Column('lastname', sa.String(length=64), nullable=False),
+    sa.Column('promo', sa.String(length=64), nullable=True),
     sa.Column('staff', sa.Boolean(), nullable=False),
     sa.Column('deleted', sa.Boolean(), server_default='0', nullable=False),
     sa.PrimaryKeyConstraint('id'),
@@ -30,8 +30,8 @@ def upgrade():
     )
     op.create_table('users',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('username', sa.String(), nullable=False),
-    sa.Column('password', sa.String(), nullable=False),
+    sa.Column('username', sa.String(length=64), nullable=False),
+    sa.Column('password', sa.String(length=64), nullable=False),
     sa.Column('admin', sa.Boolean(), nullable=False),
     sa.Column('suspended', sa.Boolean(), nullable=False),
     sa.Column('token', sa.String(length=50), nullable=True),
