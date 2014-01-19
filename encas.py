@@ -122,7 +122,7 @@ def createAccount():
     if form.validate_on_submit():
         account = Account.create(form.firstname.data, form.lastname.data, form.promo.data, form.number.data)
 
-        if form.balance.data is not None:
+        if form.balance.data is not None and form.balance.data != 0:
             Transaction.add(account.id, form.balance.data)
 
         return account.serialize()
