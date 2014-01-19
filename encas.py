@@ -89,8 +89,10 @@ def listAccounts(filter):
         accounts = Account.list("deleted")
     elif filter == "debts":
         accounts = Account.list("debts")
+    elif filter == "staff":
+        accounts = Account.list("staff")
     else:
-        raise ApiError("Wrong filter, must be one of these: active, deleted, debts")
+        raise ApiError("Wrong filter, must be one of these: active, deleted, debts, staff")
 
     return [acc.serialize() for acc in accounts]
 
@@ -139,6 +141,18 @@ def editAccount(id):
     if form.validate_on_submit():
         fields = {'firstname' : form.firstname.data, 'lastname' : form.lastname.data, 'promo' : form.promo.data}
         return Account(id=id).edit(fields).serialize()
+    else:
+        raise MissingFieldsError(form.errors.keys())
+
+@app.route('/account/<id>/staff', methods=['POST'])
+@login_required_api
+@errorhandler
+@admin_required
+def staffAccount(id):
+    id = convert(int, id)
+    form = forms.StaffStatusForm()
+    if form.validate_on_submit():
+        return Account(id).staff(form.staff.data).serialize()
     else:
         raise MissingFieldsError(form.errors.keys())
 

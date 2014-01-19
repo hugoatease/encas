@@ -11,7 +11,8 @@ var accountModel = {
 	edited: {
 		firstname: ko.observable(),
 		lastname: ko.observable(),
-		promo: ko.observable()
+		promo: ko.observable(),
+        staff: ko.observable()
 	},
 	
 	visible_intro: ko.observable(true),
@@ -61,6 +62,7 @@ var accountModel = {
 		accountModel.edited.firstname(accountModel.firstname());
 		accountModel.edited.lastname(accountModel.lastname());
 		accountModel.edited.promo(accountModel.promo());
+        accountModel.edited.staff(accountModel.staff());
 	},
 	
 	edit : function(target) {
@@ -72,8 +74,18 @@ var accountModel = {
 			accountModel.showAccountData(data.id);
             showAccount(data.number);
 		}
-		
-		api.account.edit(refresh, current.account_id, accountModel.edited.firstname(), accountModel.edited.lastname(), accountModel.edited.promo());
+
+        function staff_success(data) {
+            if (reportError(data)) {
+                return;
+            }
+        }
+
+        if (accountModel.edited.staff() !== accountModel.staff()) {
+            api.account.staff(staff_success, current.account_id, accountModel.edited.staff());
+        }
+
+        api.account.edit(refresh, current.account_id, accountModel.edited.firstname(), accountModel.edited.lastname(), accountModel.edited.promo());
 	},
 
     delete : function(target) {

@@ -14,7 +14,9 @@ var api = {
         }
 
         function wrapped(data) {
-            var result = callback(data);
+            if (callback !== undefined) {
+                var result = callback(data);
+            }
             api.current_calls--;
             if (api.current_calls === 0) {
                 wait.hide();
@@ -128,6 +130,12 @@ var api = {
 			var data = {'firstname' : firstname, 'lastname' : lastname, 'promo' : promo};
             api.ajax('POST', url, api.wrapper(callback), data);
 		},
+
+        staff : function(callback, account_id, status) {
+            var url = '/account/' + account_id + '/staff';
+            var data = {'staff' : status};
+            api.ajax('POST', url, api.wrapper(callback), data);
+        },
 
         delete : function(callback, account_id) {
             var url = '/account/' + account_id + '/delete';

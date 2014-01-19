@@ -39,6 +39,9 @@ class AccountEditionForm(Form):
     lastname = TextField('Last Name', [InputRequired()])
     promo = TextField('Promotion', [InputRequired()])
 
+class StaffStatusForm(Form):
+    staff = BooleanField('Staff member', [InputRequired()])
+
 class TransactionAddForm(Form):
     account_id = IntegerField('Account ID', [InputRequired()])
     cash = FloatField('Cash', [InputRequired()])

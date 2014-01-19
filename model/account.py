@@ -99,13 +99,16 @@ class Account:
     def list(filter="active", balance=True):
         query = db.session.query(AccountModel).order_by("number desc")
 
-        if filter not in ['active', 'deleted', 'debts']:
-            raise ApiError("Wrong filter, must be one of these: active, deleted, debts")
+        if filter not in ['active', 'deleted', 'debts', 'staff']:
+            raise ApiError("Wrong filter, must be one of these: active, deleted, debts, staff")
 
-        if filter == "active" or filter=="debts":
-            query = query.filter_by(deleted=False)
-        elif filter == "deleted":
+        if filter == "deleted":
             query = query.filter_by(deleted=True)
+        else:
+            query = query.filter_by(deleted=False)
+
+        if filter == 'staff':
+            query = query.filter_by(staff=True)
 
         accounts = query.all()
         if balance or filter == "debts":
@@ -140,6 +143,15 @@ class Account:
 
         db.session.commit()
         return self.account
+
+    def staff(self, status):
+        if status not in [True, False]:
+            raise ApiError("Staff status must be True or False")
+
+        self.account.staff = status
+        db.session.commit()
+        return self.account
+
 
     def delete(self):
         self.account.number = None

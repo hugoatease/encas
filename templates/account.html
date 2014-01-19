@@ -45,8 +45,8 @@
             <h2 data-bind="text: fullname"></h2><hr />
             <h3>
                 <span data-bind="text: number" class="label label-primary"></span>
+                <span data-bind="if: staff" class="label label-warning">Staff</span>
                 <span data-bind="text: promo" class="label label-success"></span>
-                <span data-bind="if: staff" class="label label-danger"></span>
             </h3>
             <h3>Solde : <span data-bind="text: balance"></span>€</h3>
             <p><b>Date de création :</b> <span data-bind="text: date"> </span></p>
@@ -76,6 +76,12 @@
                             <label class="col-sm-3 control-label">Promotion</label>
                             <div class="col-sm-9">
                                 <input data-bind="value: promo" type="text" class="form-control" />
+                            </div>
+                        </div>
+                        <div data-bind="visible: $root.is_admin" class="form-group">
+                            <label class="col-sm-3 control-label">Staff</label>
+                            <div class="col-sm-9">
+                                <input data-bind="checked: staff" type="checkbox" class="form-control" />
                             </div>
                         </div>
                         <div class="form-group">

@@ -41,6 +41,11 @@ var accountAdminModel = {
         accountAdminModel.displayAccounts("debts");
     },
 
+    display_staff : function(target) {
+        accountAdminModel.show_number(true);
+        accountAdminModel.displayAccounts("staff");
+    },
+
     add : function(target) {
         var fields = accountAdminModel.add_fields;
 
