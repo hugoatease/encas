@@ -104,6 +104,7 @@ var api = {
 		},
 		
 		search : function(callback, firstname) {
+            firstname = encodeURIComponent(firstname);
 			var url = '/account/search/' + firstname;
             api.ajax('GET', url, api.wrapper(callback));
 		},
