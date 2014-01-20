@@ -11,5 +11,4 @@ Werkzeug==0.9.4
 alembic==0.6.2
 argparse==1.2.1
 itsdangerous==0.23
-psycopg2==2.5.1
 wsgiref==0.1.2
