@@ -22,7 +22,7 @@ from datetime import datetime
 from flask.ext.sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.schema import Column, ForeignKey
-from sqlalchemy.types import Integer, Float, String, DateTime, Boolean
+from sqlalchemy.types import Integer, Numeric, String, DateTime, Boolean
 from sqlalchemy.sql.expression import true, false
 
 STRING_SIZE = 64
@@ -76,8 +76,8 @@ class Transaction(db.Model):
     date = Column(DateTime, nullable=False, default=datetime.utcnow)
     
     operation = Column(Integer, nullable=False)
-    cash = Column(Float, nullable=False)
-    balance = Column(Float, nullable=False)
+    cash = Column(Numeric(precision=5, scale=2), nullable=False)
+    balance = Column(Numeric(precision=5, scale=2), nullable=False)
 
     revoked = Column(Boolean, nullable=False, default=False)
     revokes = Column(Integer, ForeignKey('transactions.id'))
@@ -91,7 +91,7 @@ class Transaction(db.Model):
             revokes_operation = None
 
         serialized = {'id' : self.id, 'account_id' : self.account, 'date' : self.date.isoformat(),
-                'operation' : self.operation, 'cash' : self.cash, 'balance' : self.balance,
+                'operation' : self.operation, 'cash' : str(self.cash), 'balance' : str(self.balance),
                 'revoked' : self.revoked, 'revokes' : self.revokes, 'revokes_operation' : revokes_operation}
 
         return serialization(self, serialized)

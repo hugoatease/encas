@@ -94,6 +94,9 @@ def listAccounts(filter):
     else:
         raise ApiError("Wrong filter, must be one of these: active, deleted, debts, staff")
 
+    for account in accounts:
+        account.balance = str(account.balance)
+
     return [acc.serialize() for acc in accounts]
 
 @app.route('/account/<account_id>', methods=['GET'])
@@ -170,14 +173,14 @@ def deleteAccount(id):
 @errorhandler
 def getBalance(id):
     id = convert(int, id)
-    return {'balance' : Transaction.getBalance(id)}
+    return {'balance' : str(Transaction.getBalance(id))}
 
 @app.route('/account/<id>/calculate', methods=['GET'])
 @login_required_api
 @errorhandler
 def calculateBalance(id):
     id = convert(int, id)
-    return {'balance' : Transaction.calculateBalance(id)}
+    return {'balance' : str(Transaction.calculateBalance(id))}
 
 @app.route('/account/<int:account_id>/transactions', methods=['GET'])
 @login_required_api

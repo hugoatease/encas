@@ -21,6 +21,7 @@ from database import Account as AccountModel
 import transaction
 from sqlalchemy.orm.exc import NoResultFound
 from errors import ApiError
+from decimal import Decimal
 
 class Account:
     @staticmethod
@@ -121,7 +122,7 @@ class Account:
             all = list(accounts)
             accounts = list()
             for account in all:
-                if account.balance < 0:
+                if account.balance < Decimal(0):
                     accounts.append(account)
 
         return accounts

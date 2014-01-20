@@ -17,7 +17,7 @@
 #   along with Encas.  If not, see <http://www.gnu.org/licenses/>.
 
 from flask_wtf import Form
-from wtforms import TextField, IntegerField, FloatField, BooleanField
+from wtforms import TextField, IntegerField, FloatField, BooleanField, DecimalField
 from wtforms.validators import InputRequired, Optional, Length, EqualTo
 
 class LoginForm(Form):
@@ -32,7 +32,7 @@ class AccountCreationForm(Form):
     lastname = TextField('Last Name', [InputRequired()])
     promo = TextField('Promotion', [InputRequired()])
     number = IntegerField('Account number', [Optional()])
-    balance = FloatField('Initial balance', [Optional()])
+    balance = DecimalField('Initial balance', [Optional()], places=2)
 
 class AccountEditionForm(Form):
     firstname = TextField('First Name', [InputRequired()])
@@ -44,7 +44,7 @@ class StaffStatusForm(Form):
 
 class TransactionAddForm(Form):
     account_id = IntegerField('Account ID', [InputRequired()])
-    cash = FloatField('Cash', [InputRequired()])
+    cash = DecimalField('Cash', [InputRequired()], places=2)
 
 class UserCreationForm(Form):
     username = TextField('Username', [InputRequired()])
