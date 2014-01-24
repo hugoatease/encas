@@ -1,3 +1,5 @@
+var math = mathjs();
+
 var checkoutModel = {
 	balance: ko.observable(),
 	checkout_price: ko.observable(),
@@ -34,9 +36,17 @@ var checkoutModel = {
 		}
 
         var price = checkoutModel.checkout_price();
-        if (math !== undefined) {
-            price = math.eval(price);
-            price = Math.round(price * Math.pow(10, decimals)) / Math.pow(10, decimals);
+        var negative = false;
+
+        price = math.eval(price);
+        if (price < 0) {
+            negative = true;
+        }
+
+        price = Math.round(Math.abs(price) * Math.pow(10, decimals)) / Math.pow(10, decimals);
+
+        if (negative) {
+            price *= -1;
         }
 
 		api.transaction.add(refresh.bind(checkoutModel), account_id, price);
