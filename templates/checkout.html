@@ -3,6 +3,7 @@
 
 {% block javascript %}
 <script type="text/javascript" src="/static/js/search.js"></script>
+<script type="text/javascript" src="/static/js/math.min.js"></script>
 <script type="text/javascript" src="/static/js/checkout.js"></script>
 <script type="text/javascript" src="/static/js/transaction.js"></script>
 <script type="text/javascript">
@@ -33,7 +34,9 @@
         boxes.number.hide();
         boxes.name.hide();
         checkoutModel.checkout_focus(false);
-    })
+    });
+
+    var math = mathjs();
 </script>
 {% endblock %}
 

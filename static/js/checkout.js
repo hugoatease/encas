@@ -20,6 +20,7 @@ var checkoutModel = {
 
 	checkout: function(callback) {
 		var account_id = current.account_id;
+        var decimals = 2;
 		
 		function refresh(data) {
 			if (reportError(data)) {
@@ -32,7 +33,13 @@ var checkoutModel = {
             checkoutModel.checkout_focus(false);
 		}
 
-		api.transaction.add(refresh.bind(checkoutModel), account_id, checkoutModel.checkout_price());
+        var price = checkoutModel.checkout_price();
+        if (math !== undefined) {
+            price = math.eval(price);
+            price = Math.round(price * Math.pow(10, decimals)) / Math.pow(10, decimals);
+        }
+
+		api.transaction.add(refresh.bind(checkoutModel), account_id, price);
 	}
 };
 
