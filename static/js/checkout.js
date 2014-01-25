@@ -51,6 +51,8 @@ var checkoutModel = {
             price *= -1;
         }
 
+        price = price.toFixed(2);
+
         checkoutModel.checkout_current(price);
         checkoutModel.previous_price = price;
         return price;
