@@ -6,6 +6,7 @@
 <script type="text/javascript" src="/static/js/account.js"></script>
 <script type="text/javascript" src="/static/js/transaction.js"></script>
 <script type="text/javascript">
+    api = api(jQuery);
     accountModel = accountModel(current, ko, api, transactionModel);
     transactionModel = transactionModel(current, ko,  api, accountModel);
 
