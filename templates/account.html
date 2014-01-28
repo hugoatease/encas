@@ -6,6 +6,8 @@
 <script type="text/javascript" src="/static/js/account.js"></script>
 <script type="text/javascript" src="/static/js/transaction.js"></script>
 <script type="text/javascript">
+    accountModel = accountModel(current, ko, api, transactionModel);
+
     var viewModels = {
         account : accountModel,
         transaction : transactionModel,
