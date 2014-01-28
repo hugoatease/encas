@@ -1,130 +1,139 @@
-var accountAdminModel = {
-    accounts : ko.observableArray(),
-    add_fields : {
-        firstname : ko.observable(),
-        lastname : ko.observable(),
-        promo : ko.observable(),
-        number : ko.observable(),
-        balance : ko.observable()
-    },
+adminModel = function (ko, api, transactionModel) {
 
-    show_number : ko.observable(true),
+    var accountAdminModel = {
+        accounts : ko.observableArray(),
+        add_fields : {
+            firstname : ko.observable(),
+            lastname : ko.observable(),
+            promo : ko.observable(),
+            number : ko.observable(),
+            balance : ko.observable()
+        },
 
-    displayAccounts : function(filter) {
-        function refresh(data) {
-            if (reportError(data)) {
-                return;
+        show_number : ko.observable(true),
+
+        displayAccounts : function(filter) {
+            function refresh(data) {
+                if (reportError(data)) {
+                    return;
+                }
+                var data = data.data;
+
+                for (var i=0; i < data.length; i++) {
+                    data[i]['state'] = getAccountState(data[i].balance);
+                }
+
+               this.accounts(data);
             }
-            var data = data.data;
+            api.account.list(refresh.bind(this), filter);
+        },
 
-            for (var i=0; i < data.length; i++) {
-                data[i]['state'] = getAccountState(data[i].balance);
+        display_active : function(target) {
+            this.show_number(true);
+            this.displayAccounts("active");
+        },
+
+        display_deleted : function(target) {
+            this.show_number(false);
+            this.displayAccounts("deleted");
+        },
+
+        display_debts : function(target) {
+            this.show_number(true);
+            this.displayAccounts("debts");
+        },
+
+        display_staff : function(target) {
+            this.show_number(true);
+            this.displayAccounts("staff");
+        },
+
+        add : function(target) {
+            var fields = this.add_fields;
+
+            function refresh(data) {
+                if (reportError(data)) {
+                    return;
+                }
+
+                reportSuccess("Compte " + data.data.number + " - " + data.data.lastname + " " + data.data.firstname + " créé.");
+                this.display_active();
             }
 
-            accountAdminModel.accounts(data);
+            api.account.create(refresh.bind(this), fields.firstname(), fields.lastname(), fields.promo(), fields.number(), fields.balance());
         }
-        api.account.list(refresh, filter);
-    },
+    };
 
-    display_active : function(target) {
-        accountAdminModel.show_number(true);
-        accountAdminModel.displayAccounts("active");
-    },
+    var transactionAdminModel = {
+        display : function(filter) {
+            transactionModel.getTransactions(undefined, true);
+        }
+    };
 
-    display_deleted : function(target) {
-        accountAdminModel.show_number(false);
-        accountAdminModel.displayAccounts("deleted");
-    },
+    var userAdminModel = {
+        users : ko.observableArray(),
 
-    display_debts : function(target) {
-        accountAdminModel.show_number(true);
-        accountAdminModel.displayAccounts("debts");
-    },
+        create_fields : {
+            username : ko.observable(),
+            password : ko.observable(),
+            password_confirm : ko.observable()
+        },
 
-    display_staff : function(target) {
-        accountAdminModel.show_number(true);
-        accountAdminModel.displayAccounts("staff");
-    },
+        create : function(target) {
+            function refresh(data) {
+                if (reportError(data)) {
+                    return;
+                }
+                var data = data.data;
 
-    add : function(target) {
-        var fields = accountAdminModel.add_fields;
-
-        function refresh(data) {
-            if (reportError(data)) {
-                return;
+                var message = "L'administrateur " + data.username + " a bien été créé.";
+                reportSuccess(message);
+                this.displayUsers();
             }
 
-            reportSuccess("Compte " + data.data.number + " - " + data.data.lastname + " " + data.data.firstname + " créé.");
-            accountAdminModel.display_active();
-        }
 
-        api.account.create(refresh, fields.firstname(), fields.lastname(), fields.promo(), fields.number(), fields.balance());
-    }
-};
+            var fields = this.create_fields;
+            api.user.create_admin(refresh.bind(this), fields.username(), fields.password(), fields.password_confirm());
+        },
 
-var transactionAdminModel = {
-    display : function(filter) {
-        transactionModel.getTransactions(undefined, true);
-    }
-};
-
-var userAdminModel = {
-    users : ko.observableArray(),
-
-    create_fields : {
-        username : ko.observable(),
-        password : ko.observable(),
-        password_confirm : ko.observable()
-    },
-
-    create : function(target) {
-        function refresh(data) {
-            if (reportError(data)) {
-                return;
+        displayUsers : function(target) {
+            function refresh(data) {
+                if (reportError(data)) {
+                    return;
+                }
+                var data = data.data;
+                this.users(data);
             }
-            var data = data.data;
+            api.user.list(refresh.bind(this));
+        },
 
-            var message = "L'administrateur " + data.username + " a bien été créé.";
-            reportSuccess(message);
-            userAdminModel.displayUsers();
-        }
+        remove : function(target) {
+            function refresh(data) {
+                if (reportError(data)) {
+                    return;
+                }
+                var data = data.data;
 
-
-        var fields = userAdminModel.create_fields;
-        api.user.create_admin(refresh, fields.username(), fields.password(), fields.password_confirm());
-    },
-
-    displayUsers : function(target) {
-        function refresh(data) {
-            if (reportError(data)) {
-                return;
+                var message = "Le compte " + data.username + " a bien été supprimé";
+                reportSuccess(message);
+                this.displayUsers();
             }
-            var data = data.data;
-            userAdminModel.users(data);
+
+            api.user.remove(refresh.bind(this), target.id);
         }
-        api.user.list(refresh);
-    },
+    };
 
-    remove : function(target) {
-        function refresh(data) {
-            if (reportError(data)) {
-                return;
-            }
-            var data = data.data;
+    userAdminModel.displayUsers = userAdminModel.displayUsers.bind(userAdminModel);
+    userAdminModel.create = userAdminModel.create.bind(userAdminModel);
+    userAdminModel.remove = userAdminModel.remove.bind(userAdminModel);
 
-            var message = "Le compte " + data.username + " a bien été supprimé";
-            reportSuccess(message);
-            userAdminModel.displayUsers();
-        }
+    var module = {
+        account : accountAdminModel,
+        transaction : transactionAdminModel,
+        user : userAdminModel
+    };
 
-        api.user.remove(refresh, target.id);
-    }
-};
+    accountAdminModel.display_active();
 
-var adminModel = {
-    account : accountAdminModel,
-    transaction : transactionAdminModel,
-    user : userAdminModel
-};
-
-accountAdminModel.display_active();
+    return module;
+}
