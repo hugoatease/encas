@@ -2,7 +2,11 @@
 {% block title %} - Administration{% endblock %}
 {% block javascript %}
 <script type="text/javascript">
-    transactionModel.show_account(true);
+require(['model/transaction', 'bootstrap'],
+    function(transactionModel, bootstrap) {
+        transactionModel.show_account(true);
+    }
+);
 </script>
 {% endblock %}
 

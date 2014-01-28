@@ -3,10 +3,14 @@
 
 {% block javascript %}
 <script type="text/javascript">
-    current.search_callback = function(account_id) {
-        accountModel.showAccountData(account_id);
-        transactionModel.getTransactions(account_id);
-    };
+require(['common', 'model/account', 'model/transaction'],
+    function(common, accountModel, transactionModel) {
+        common.current.search_callback = function(account_id) {
+            accountModel.showAccountData(account_id);
+            transactionModel.getTransactions(account_id);
+        };
+    }
+);
 </script>
 {% endblock %}
 

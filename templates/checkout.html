@@ -3,14 +3,18 @@
 
 {% block javascript %}
 <script type="text/javascript">
-    transactionModel.show_revoke(false);
-    transactionModel.show_all = false;
+require(['common', 'model/transaction', 'model/checkout'],
+    function(common, transactionModel, checkoutModel) {
+        transactionModel.show_revoke(false);
+        transactionModel.show_all = false;
 
-    current.search_callback = function(account_id) {
-        transactionModel.getTransactions(account_id);
-        checkoutModel.getBalance(account_id);
-        checkoutModel.checkout_focus(true);
-    };
+        common.current.search_callback = function(account_id) {
+            transactionModel.getTransactions(account_id);
+            checkoutModel.getBalance(account_id);
+            checkoutModel.checkout_focus(true);
+        };
+    }
+);
 </script>
 {% endblock %}
 
