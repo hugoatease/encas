@@ -7,6 +7,8 @@
 <script type="text/javascript" src="/static/js/checkout.js"></script>
 <script type="text/javascript" src="/static/js/transaction.js"></script>
 <script type="text/javascript">
+    checkoutModel = checkoutModel(current, ko, api);
+
     var viewModels = {
         checkout : checkoutModel,
         transaction : transactionModel,
