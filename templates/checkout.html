@@ -2,11 +2,16 @@
 {% block title %} - Caisse{% endblock %}
 
 {% block javascript %}
-<script type="text/javascript" src="/static/js/search.js"></script>
-<script type="text/javascript" src="/static/js/math.min.js"></script>
-<script type="text/javascript" src="/static/js/model/checkout.js"></script>
-<script type="text/javascript" src="/static/js/model/transaction.js"></script>
-<script type="text/javascript" src="/static/js/checkout.js"></script>
+<script type="text/javascript">
+    transactionModel.show_revoke(false);
+    transactionModel.show_all = false;
+
+    current.search_callback = function(account_id) {
+        transactionModel.getTransactions(account_id);
+        checkoutModel.getBalance(account_id);
+        checkoutModel.checkout_focus(true);
+    };
+</script>
 {% endblock %}
 
 {% block content %}

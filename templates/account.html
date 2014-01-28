@@ -2,10 +2,12 @@
 {% block title %} - Comptes{% endblock %}
 
 {% block javascript %}
-<script type="text/javascript" src="/static/js/search.js"></script>
-<script type="text/javascript" src="/static/js/model/account.js"></script>
-<script type="text/javascript" src="/static/js/model/transaction.js"></script>
-<script type="text/javascript" src="/static/js/account.js"></script>
+<script type="text/javascript">
+    current.search_callback = function(account_id) {
+        accountModel.showAccountData(account_id);
+        transactionModel.getTransactions(account_id);
+    };
+</script>
 {% endblock %}
 
 {% block content %}

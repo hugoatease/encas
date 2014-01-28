@@ -1,32 +1,25 @@
 api = api(jQuery);
+accountModel = accountModel(current, ko, api, transactionModel);
 checkoutModel = checkoutModel(current, ko, api);
-transactionModel = transactionModel(current, ko, api);
+transactionModel = transactionModel(current, ko,  api, accountModel);
 
 var viewModels = {
     checkout : checkoutModel,
+    account : accountModel,
     transaction : transactionModel,
+    admin : adminModel(ko, api, transactionModel),
     is_admin : ko.observable()
 };
 
+viewModels.account.deleteAcc = viewModels.account.delete;
 viewModels.checkout.make_checkout = function() {
         checkoutModel.checkout(transactionModel.getTransactions);
 }
 
-transactionModel.show_revoke(false);
-transactionModel.show_all = false;
-
 ko.applyBindings(viewModels);
-
-current.search_callback = function(account_id) {
-    transactionModel.getTransactions(account_id);
-    checkoutModel.getBalance(account_id);
-    checkoutModel.checkout_focus(true);
-};
-
 
 Mousetrap.bindGlobal('escape', function(ev) {
     ev.preventDefault();
     boxes.number.hide();
     boxes.name.hide();
-    checkoutModel.checkout_focus(false);
 });
