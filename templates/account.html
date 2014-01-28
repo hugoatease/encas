@@ -7,6 +7,7 @@
 <script type="text/javascript" src="/static/js/transaction.js"></script>
 <script type="text/javascript">
     accountModel = accountModel(current, ko, api, transactionModel);
+    transactionModel = transactionModel(current, ko,  api, accountModel);
 
     var viewModels = {
         account : accountModel,
@@ -19,8 +20,8 @@
 	ko.applyBindings(viewModels);
 
     current.search_callback = function(account_id) {
-        accountModel.showAccountData.bind(accountModel)(account_id);
-        transactionModel.getTransactions.bind(transactionModel)(account_id);
+        accountModel.showAccountData(account_id);
+        transactionModel.getTransactions(account_id);
     };
 
     Mousetrap.bindGlobal('escape', function(ev) {
