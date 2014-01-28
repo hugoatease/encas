@@ -1,21 +1,9 @@
 {% extends 'base.html' %}
 {% block title %} - Administration{% endblock %}
 {% block javascript %}
-    <script type="text/javascript" src="/static/js/admin.js"></script>
-    <script type="text/javascript" src="/static/js/transaction.js"></script>
-    <script type="text/javascript">
-        api = api(jQuery);
-        transactionModel = transactionModel(current, ko, api);
-        var viewModels = {
-            admin : adminModel(ko, api, transactionModel),
-            transaction : transactionModel,
-            is_admin : ko.observable()
-        };
-
-        transactionModel.show_account(true);
-
-        ko.applyBindings(viewModels);
-    </script>
+<script type="text/javascript" src="/static/js/model/admin.js"></script>
+<script type="text/javascript" src="/static/js/model/transaction.js"></script>
+<script type="text/javascript" src="/static/js/admin.js"></script>
 {% endblock %}
 
 {% block content %}

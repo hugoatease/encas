@@ -1,90 +1,32 @@
-var math = mathjs();
+api = api(jQuery);
+checkoutModel = checkoutModel(current, ko, api);
+transactionModel = transactionModel(current, ko, api);
 
-checkoutModel = function(current, ko, api) {
-    var module = {
-        balance: ko.observable(),
-        checkout_price: ko.observable(),
-        checkout_current: ko.observable(0),
-        checkout_focus : ko.observable(false),
-        show_balance : ko.observable(false),
-        show_keyhelp : ko.observable(false),
+var viewModels = {
+    checkout : checkoutModel,
+    transaction : transactionModel,
+    is_admin : ko.observable()
+};
 
-        previous_price: 0,
-
-        getBalance: function(account_id) {
-            function refreshBalance(data) {
-                if (reportError(data)) {
-                    return;
-                }
-
-                this.balance(data.data.balance);
-                this.show_balance(true);
-            }
-
-            api.account.balance(refreshBalance.bind(this), account_id);
-        },
-
-        getPrice : function() {
-            var decimals = 2;
-            var price = this.checkout_price();
-            var negative = false;
-
-            try {
-                price = math.eval(price);
-            }
-            catch (ex) {
-                return this.previous_price;
-            }
-
-            if (isNaN(price)) {
-                this.previous_price = 0;
-                this.checkout_current(0);
-                return 0;
-            }
-
-            if (price < 0) {
-                negative = true;
-            }
-
-            price = Math.round(Math.abs(price) * Math.pow(10, decimals)) / Math.pow(10, decimals);
-
-            if (negative) {
-                price *= -1;
-            }
-
-            price = price.toFixed(2);
-
-            this.checkout_current(price);
-            this.previous_price = price;
-            return price;
-        },
-
-        checkout: function(callback) {
-            var account_id = current.account_id;
-
-            function refresh(data) {
-                if (reportError(data)) {
-                    return;
-                }
-
-                this.getBalance(account_id);
-                this.checkout_price("");
-                callback(account_id);
-                this.checkout_focus(false);
-            }
-
-            api.transaction.add(refresh.bind(this), account_id, this.getPrice());
-        }
-    };
-
-    module.checkout_price.subscribe((function(value) {
-        this.getPrice();
-    }).bind(module));
-
-    Mousetrap.bind('enter', function(ev) {
-        ev.preventDefault();
-        module.checkout_focus(true);
-    });
-
-    return module;
+viewModels.checkout.make_checkout = function() {
+        checkoutModel.checkout(transactionModel.getTransactions);
 }
+
+transactionModel.show_revoke(false);
+transactionModel.show_all = false;
+
+ko.applyBindings(viewModels);
+
+current.search_callback = function(account_id) {
+    transactionModel.getTransactions(account_id);
+    checkoutModel.getBalance(account_id);
+    checkoutModel.checkout_focus(true);
+};
+
+
+Mousetrap.bindGlobal('escape', function(ev) {
+    ev.preventDefault();
+    boxes.number.hide();
+    boxes.name.hide();
+    checkoutModel.checkout_focus(false);
+});
