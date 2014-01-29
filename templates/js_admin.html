@@ -1,9 +1,11 @@
 <script type="text/javascript">
-    if (viewModels !== undefined) {
+require(['main'],
+    function(main) {
         {% if current_user.admin %}
-        viewModels.is_admin(true);
+        main.is_admin(true);
         {% else %}
-        viewModels.is_admin(false);
+        main.is_admin(false);
         {% endif %}
     }
+);
 </script>
