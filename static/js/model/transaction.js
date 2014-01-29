@@ -48,12 +48,11 @@ define(['require', 'knockout', 'encasapi', 'common', 'model/account'],
 
                     if (common.current.account_id !== undefined) {
                         this.getTransactions(common.current.account_id);
+                        require('model/account').showAccountData(common.current.account_id);
                     }
                     else {
                         this.getTransactions(undefined, true);
                     }
-
-                    require('model/account').showAccountData(current.account_id);
                 }
 
                 api.transaction.revoke(refresh.bind(this), transaction_id);
