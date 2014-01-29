@@ -1,5 +1,5 @@
-define(['knockout', 'encasapi', 'common'],
-    transactionModel = function(ko, api, common) {
+define(['require', 'knockout', 'encasapi', 'common', 'model/account'],
+    transactionModel = function(require, ko, api, common) {
         var module = {
             transactions: ko.observableArray(),
             show_revoke: ko.observable(true),
@@ -53,9 +53,7 @@ define(['knockout', 'encasapi', 'common'],
                         this.getTransactions(undefined, true);
                     }
 
-                    /*if (accountModel !== undefined) {
-                        accountModel.showAccountData(current.account_id);
-                    }*/
+                    require('model/account').showAccountData(current.account_id);
                 }
 
                 api.transaction.revoke(refresh.bind(this), transaction_id);

@@ -1,5 +1,5 @@
-define(['knockout', 'encasapi', 'common'],
-    function(ko, api, common) {
+define(['knockout', 'encasapi', 'common', 'search', 'model/transaction'],
+    function(ko, api, common, search, transactionModel) {
         var module = {
             id: ko.observable(),
             number : ko.observable(),
@@ -75,7 +75,7 @@ define(['knockout', 'encasapi', 'common'],
                     console.log(this);
                     var data = data.data;
                     this.showAccountData(data.id);
-                    //showAccount(data.number);
+                    search.showAccount(data.number);
                 }
 
                 function staff_success(data) {
@@ -100,7 +100,7 @@ define(['knockout', 'encasapi', 'common'],
 
                     this.visible_account_deletion(false);
                     this.visible_intro(true);
-                    //transactionModel.clear();
+                    transactionModel.clear();
 
                     var message = "L'utilisateur " + data.lastname + " " + data.firstname + " a été supprimé"
                     common.reportSuccess(message);
